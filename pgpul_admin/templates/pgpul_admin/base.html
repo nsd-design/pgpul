@@ -1,0 +1,22 @@
+{% include 'pgpul_admin/inc/head.html' %}
+<body>
+    {% include 'pgpul_admin/inc/header.html' %}
+    {% include 'pgpul_admin/inc/sidebar.html' %}
+
+    <main id="main" class="main">
+        <div class="pagetitle">
+          <h1>Dashboard</h1>
+          <nav>
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+              <li class="breadcrumb-item active">Dashboard</li>
+            </ol>
+          </nav>
+        </div><!-- End Page Title -->
+        {% block content %}{% endblock %}
+    </main>
+
+    {% include 'pgpul_admin/inc/footer.html' %}
+    {% include 'pgpul_admin/inc/utils.html' %}
+</body>
+</html>
