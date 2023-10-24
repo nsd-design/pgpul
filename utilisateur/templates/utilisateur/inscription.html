@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load crispy_forms_tags %}
 {% load static %}
 <html lang="fr">
 
@@ -47,11 +48,11 @@
       <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
         <div class="container">
           <div class="row justify-content-center">
-            <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+            <div class="col-lg-6 col-md-6 d-flex flex-column align-items-center justify-content-center">
 
               <div class="d-flex justify-content-center py-4">
                 <a href="index.html" class="logo d-flex align-items-center w-auto">
-                  <img src="assets/img/logo.png" alt="">
+                  <img src="{% static 'assets/img/logo.png' %}" alt="">
                   <span class="d-none d-lg-block">PGPUL</span>
                 </a>
               </div><!-- End Logo -->
@@ -65,46 +66,63 @@
                     <p class="text-center small">Entrez vos informations personnelles pour créer un compte</p>
                   </div>
 
-                  <form method="POST" class="row g-3 needs-validation" novalidate>
+                  <div id="alert-container" ></div>
+
+                  <form method="POST" id="insForm" class="row g-3 needs-validation" novalidate>
+                    {% csrf_token %}
+
                     <div class="col-12">
-                      <label for="nom" class="form-label">Nom</label>
-                      <input type="text" name="name" class="form-control" id="nom" required>
-                      <div class="invalid-feedback">Veuillez saisir votre nom!</div>
+                      <label  class="form-label">Matricule</label>
+                      {{ form.matricule | as_crispy_field }}
+<!--                      <input type="text" name="firstname" placeholder="john" class="form-control" id="firstname" required>-->
+<!--                      <div class="invalid-feedback">Veuillez saisir votre prénom !</div>-->
                     </div>
 
                     <div class="col-12">
-                      <label for="yourEmail" class="form-label">Email</label>
-                      <input type="email" name="email" class="form-control" id="yourEmail" required>
-                      <div class="invalid-feedback">Veuillez entrer une adresse email valide!</div>
+                      <label  class="form-label">Prénom</label>
+                      {{ form.first_name | as_crispy_field }}
+<!--                      <input type="text" name="firstname" placeholder="john" class="form-control" id="firstname" required>-->
+<!--                      <div class="invalid-feedback">Veuillez saisir votre prénom !</div>-->
                     </div>
 
                     <div class="col-12">
-                      <label for="yourUsername" class="form-label">Nom d'utilisateur</label>
-                      <div class="input-group has-validation">
-<!--                        <span class="input-group-text" id="inputGroupPrepend">@</span>-->
-                        <input type="text" name="username" class="form-control" id="yourUsername" required>
-                        <div class="invalid-feedback">Veuillez choisir un nom d’utilisateur.</div>
-                      </div>
+                      <label  class="form-label">Nom</label>
+                      {{ form.last_name | as_crispy_field }}
+<!--                      <input type="text" name="name" placeholder="doe" class="form-control" id="nom" required>-->
+<!--                      <div class="invalid-feedback">Veuillez saisir votre nom!</div>-->
                     </div>
 
                     <div class="col-12">
-                      <label for="yourPassword" class="form-label">Password</label>
-                      <input type="password" name="password" class="form-control" id="yourPassword" required>
+                      <label  class="form-label">Nom d'utilisateur</label>
+                      {{ form.username | as_crispy_field }}
+<!--                      <input type="text" name="name" placeholder="doe" class="form-control" id="nom" required>-->
+<!--                      <div class="invalid-feedback">Veuillez saisir votre nom!</div>-->
+                    </div>
+
+
+                    <div class="col-12">
+                      <label  class="form-label">Email</label>
+                      {{ form.email | as_crispy_field }}
+<!--                      <input type="email" name="email" placeholder="xyz@exemple.com" class="form-control" id="yourEmail" required>-->
+<!--                      <div class="invalid-feedback">Veuillez entrer une adresse email valide!</div>-->
+                    </div>
+
+                    <div class="col-12">
+                      <label for="id_password" class="form-label">Mot de passe</label>
+                      {{ form.password | as_crispy_field }}
                       <div class="invalid-feedback">Veuillez saisir votre mot de passe !</div>
                     </div>
+                    <div class="col-12">
+                      <label for="confirmpassword" class="form-label">Confirmation Mot de passe</label>
+                      <input type="password" name="confirm_password" class="form-control" id="confirmpassword" required>
+                      <div class="invalid-feedback">Les deux mot de passe doivent être identiques !</div>
+                    </div>
 
                     <div class="col-12">
-                      <div class="form-check">
-                        <input class="form-check-input" name="terms" type="checkbox" value="" id="acceptTerms" required>
-                        <label class="form-check-label" for="acceptTerms">I agree and accept the <a href="#">terms and conditions</a></label>
-                        <div class="invalid-feedback">You must agree before submitting.</div>
-                      </div>
+                      <button class="btn btn-primary w-100" type="submit">Créer</button>
                     </div>
                     <div class="col-12">
-                      <button class="btn btn-primary w-100" type="submit">Create Account</button>
-                    </div>
-                    <div class="col-12">
-                      <p class="small mb-0">Vous avez déjà un compte ? <a href="pages-login.html">Se connecter</a></p>
+                      <p class="small mb-0">Vous avez déjà un compte ? <a href="{% url 'connexion' %}">Se connecter</a></p>
                     </div>
                   </form>
 
@@ -142,6 +160,77 @@
 
   <!-- Template Main JS File -->
   <script src="{% static 'assets/js/main.js' %}"></script>
+<!-- JQuery-->
+<script src="{% static 'assets/js/jquery371.min.js' %}"></script>
+    <script>
+        $(document).ready(function(){
+          $('#id_password').attr('type', 'password')
+          setTimeout(function(){
+            if($("#msg").length > 0){
+              $("#msg").remove()
+            }
+          }, 3000)
+
+            $('#insForm').submit(function(e){
+                e.preventDefault();
+
+                var password = $("#id_password").val()
+                var confirmPassword = $("#confirmpassword").val()
+
+                if(password !== confirmPassword){
+                  $("#confirmpassword").removeClass("is-valid").addClass("is-invalid")
+                }
+                else{
+                  $("#confirmpassword").removeClass("is-invalid").addClass("is-valid")
+                }
+
+                function declenche_alert(id, msg){
+                  var alert = `<div id=${id} class="alert alert-danger" role="alert"> ${msg} </div>`
+                  $("#alert-container").append(alert)
+                  setTimeout(function(){
+                    if($("#"+id+"").length > 0){ $("#"+id+"").remove();}
+                  }, 4000);
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: "/user/signup/",
+                    data: $(this).serialize(),
+                    success: function(data){
+                        if(data.success) {
+                          console.log(data.success);
+                          var alert = '<div id="success" class="alert alert-success" role="alert">'+ data.success +'</div>';
+                          $("#alert-container").html(alert);
+                          setTimeout(function(){
+                            if($("#success").length > 0){ $("#success").remove();}
+                          }, 3000);
+                          $('#insForm')[0].reset();
+                          setTimeout(function(){
+                          let protocol = window.location.protocol;
+                          let host = window.location.host;
+                          let url = `${protocol}//${host}/user/login/`;
+                          window.location.href = url;
+                        }, 1000);
+                        }
+                        else{
+                          if(typeof data.errors === 'object'){
+                            console.log(data.errors);
+                            var info = data.errors;
+                            if(info.username){
+                              declenche_alert("username_error", "Ce nom d'utilisateur existe déjà");
+                            }
+                            if(info.email){
+                              declenche_alert("email_error", "Veuillez saisir une adresse email valide");
+                            }
+
+                           }
+
+                        }
+                    },
+                })
+            });
+        })
+    </script>
 
 </body>
 
