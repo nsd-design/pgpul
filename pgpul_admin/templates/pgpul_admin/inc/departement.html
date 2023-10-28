@@ -75,18 +75,13 @@
           <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
             <!-- Create Classe -->
             <h5 class="card-title lh-base">Créez une Classe</h5>
-            <form method="POST" action="/departement/fac/" class="row g-3" id="classe_form">
+            <form method="POST" action="/departement/classe/" class="row g-3" id="classe_form">
               {% csrf_token %}
               <div class="col-md-6">
-                <label for="id_nom_fac" class="form-label">Nom de la Faculté</label>
-
+                <label for="id_designation" class="form-label">Designation de la classe</label>
+                {{ classe_form.designation | as_crispy_field }}
               </div>
-              <div class="col-md-6">
-                <label for="id_code_fac" class="form-label">Code de la Faculté</label>
-
-
-              </div>
-              <div class="col-12">
+              <div class="col-12 col-md-3 position-md-absolute top-md-0 mt-md-5 mb-3 end-md-0 translate-md-middle-y">
                 <button class="btn btn-primary" type="submit">Créer</button>
               </div>
             </form>
@@ -316,6 +311,27 @@
 {% block custom_js %}
 <script>
   $(document).ready(function(){
+
+    function save(url, form, msg){
+      $.ajax({
+        type: "POST",
+        url: url,
+        data: $(form).serialize(),
+        success: function(data){
+          if(data.success){
+            alert(msg)
+          }
+          else if(data.exists.length > 0){
+            console.log(data.exists)
+          }
+          else{
+            console.log(data.errors)
+          }
+
+        },
+      });
+    }
+
     $("#fac_form").submit(function(e){
       e.preventDefault();
       $.ajax({
@@ -357,6 +373,14 @@
         },
       });
     }); 
+
+    $("#classe_form").submit(function(e){
+      e.preventDefault();
+      const url = "/departement/classe/";
+      const msg = "Classe creee avec succes";
+      const form = $(this);
+      save(url, form, msg)
+    });
 
   })
 </script>

@@ -1,8 +1,8 @@
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
-from pgpul_admin.forms import FaculteForm, DepartementForm
-from pgpul_admin.models import Faculte, Departement
+from pgpul_admin.forms import *
+from pgpul_admin.models import *
 
 template_model = "pgpul_admin/inc/"
 
@@ -14,8 +14,11 @@ def dashboard(request):
 def departement(request):
     fac_form = FaculteForm()  # Formulaire pour la Faculte
     dept_form = DepartementForm()  # Formulaire pour le Departement
-    return render(request, template_model + "departement.html",
-                  context={"fac_form": fac_form, "dept_form": dept_form})
+    classe_form = ClassForm()  # Formulaire pour le Departement
+
+    context = {"fac_form": fac_form, "dept_form": dept_form, "classe_form": classe_form}
+    
+    return render(request, template_model + "departement.html", context=context)
 
 
 def create_faculte(request):
@@ -61,5 +64,27 @@ def create_department(request):
             return JsonResponse({"success": True})
         else:
             return JsonResponse({"errors": dept_form.errors})
+
+    return redirect('departement')
+
+def create_classe(request):
+    if request.method == "POST":
+        # Verifier la classe existe dans la db
+        nom_classe = request.POST['designation']
+        if Classe.objects.filter(designation=nom_classe).exists():
+            return JsonResponse({"exists": "Cette classe existe déjà, veuillez entrer une nouvelle désignation."})
+        
+        class_form = ClassForm(request.POST)
+
+        if class_form.is_valid():
+            user = request.user
+            designation = class_form.cleaned_data['designation']
+
+            new_class = Classe.objects.create(designation=designation, created_by=user)
+            new_class.save()
+
+            return JsonResponse({"success": True})
+        else:
+            return JsonResponse({"errors": class_form.errors})
 
     return redirect('departement')
