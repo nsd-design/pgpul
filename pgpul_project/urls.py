@@ -22,5 +22,6 @@ from pgpul_admin.views import dashboard
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', dashboard, name='dashmin'),
-    path('user/', include('utilisateur.urls'))
+    path('user/', include('utilisateur.urls')),
+    path('', include('pgpul_admin.urls'))
 ]

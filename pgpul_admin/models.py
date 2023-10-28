@@ -33,6 +33,9 @@ class Faculte(UserInfos):
     nom_fac = models.CharField(max_length=50)
     code_fac = models.IntegerField(unique=True)
 
+    def __str__(self):
+        return f"{self.nom_fac}"
+
 
 class Departement(UserInfos):
     nom_dept = models.CharField(max_length=50)
