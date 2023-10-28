@@ -45,18 +45,21 @@
           <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
             <!-- Create Department -->
             <h5 class="card-title lh-base">Créez un Département</h5>
-            <form method="POST" action="/departement/fac/" class="row g-3" id="dept_form">
+            <form method="POST" action="/departement/dept/" class="row g-3" id="dept_form">
               {% csrf_token %}
-              <div class="col-md-6">
-                <label for="id_nom_fac" class="form-label">Nom de la Faculté</label>
-
+              <div class="col-md-3">
+                <label for="id_nom_dept" class="form-label">Nom du Département</label>
+                {{ dept_form.nom_dept | as_crispy_field}}
               </div>
-              <div class="col-md-6">
-                <label for="id_code_fac" class="form-label">Code de la Faculté</label>
-
-
+              <div class="col-md-3">
+                <label for="id_code_dept" class="form-label">Code du Département</label>
+                {{ dept_form.code_dept | as_crispy_field}}
               </div>
-              <div class="col-12">
+              <div class="col-md-3">
+                <label for="id_dept_fac" class="form-label">Faculté</label>
+                {{ dept_form.dept_fac | as_crispy_field}}
+              </div>
+              <div class="col-12 col-md-3 position-md-absolute top-md-0 mt-md-5 mb-3 end-md-0 translate-md-middle-y">
                 <button class="btn btn-primary" type="submit">Créer</button>
               </div>
             </form>
@@ -333,6 +336,27 @@
         },
       })
     })
+
+    $("#dept_form").submit(function(evt){
+      evt.preventDefault();
+      $.ajax({
+        type: "POST",
+        url: "/departement/dept/",
+        data: $(this).serialize(),
+        success: function(data){
+          if(data.success){
+            alert("Departement cree avec succes")
+            $("#dept_form")[0].reset();
+          }
+          else if(data.exists.length > 0){
+            console.log(data.exists)
+          }
+          else{
+            console.log(data.errors)
+          }
+        },
+      });
+    }); 
 
   })
 </script>
