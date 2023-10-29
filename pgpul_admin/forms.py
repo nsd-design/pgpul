@@ -2,7 +2,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field
 from django import forms
 
-from pgpul_admin.models import Faculte, Departement
+from pgpul_admin.models import Faculte, Departement, Classe
 from utilisateur.models import Utilisateur
 
 
@@ -59,10 +59,24 @@ class DepartementForm(forms.ModelForm):
         self.fields['code_dept'].widget.attrs['min'] = 1
         self.fields['code_dept'].widget.attrs['max'] = 99
         
-         # Supprimer les labels
+        # Supprimer les labels
         for field_name, field in self.fields.items():
             field.label = ''
 
     class Meta:
         model = Departement
         fields = ['nom_dept', 'code_dept', 'dept_fac']
+
+
+class ClassForm(forms.ModelForm):
+    def __init__(self, *args, **kwarg):
+        super(ClassForm, self).__init__(*args, **kwarg)
+        self.helper = FormHelper()
+
+        # Supprimer les labels
+        for field_name, field in self.fields.items():
+            field.label = ''
+
+    class Meta:
+        model = Classe
+        fields = ['designation']
