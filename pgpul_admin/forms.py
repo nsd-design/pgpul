@@ -2,7 +2,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field
 from django import forms
 
-from pgpul_admin.models import Faculte, Departement, Classe
+from pgpul_admin.models import *
 from utilisateur.models import Utilisateur
 
 
@@ -80,3 +80,18 @@ class ClassForm(forms.ModelForm):
     class Meta:
         model = Classe
         fields = ['designation']
+
+
+class MatiereForm(forms.ModelForm):
+    def __init__(self, *args, **kwarg):
+        super(MatiereForm, self).__init__(*args, **kwarg)
+        self.helper = FormHelper()
+        self.fields['nom_mat'].widget.attrs['placeholder'] = 'entrez le nom de la matière'
+
+        # Supprimer les labels
+        for field_name, field in self.fields.items():
+            field.label = ''
+
+    class Meta:
+        model = Matiere
+        fields = ['nom_mat', 'classe_mat', 'dept_mat']

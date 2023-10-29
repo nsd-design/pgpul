@@ -1,0 +1,85 @@
+{% extends "../../pgpul_admin/base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="col-lg-10">
+
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Créer une matière</h5>
+
+              <!-- Accordion without outline borders -->
+              <div class="accordion accordion-flush" id="accordionFlushExample">
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="flush-headingOne">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                      Nouvelle matière
+                    </button>
+                  </h2>
+                  <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                    <div class="accordion-body">
+                 <!-- Horizontal Form -->
+              <form method="POST" action="{% url 'matiere' %}" id="mat_form">
+                {% csrf_token %}
+                <div class="row mb-3">
+                  <label for="id_nom_mat" class="col-sm-2 col-form-label">Matière</label>
+                  <div class="col-sm-10">
+                    {{ form.nom_mat | as_crispy_field }}
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label for="id_classe_mat" class="col-sm-2 col-form-label">Classe</label>
+                  <div class="col-sm-10">
+                    {{ form.classe_mat | as_crispy_field }}
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label for="id_dept_mat" class="col-sm-2 col-form-label">Département</label>
+                  <div class="col-sm-10">
+                    {{ form.dept_mat | as_crispy_field }}
+                  </div>
+                </div>
+
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary px-5">Créer</button>
+                  <button type="reset" class="btn btn-secondary">Annuler</button>
+                </div>
+              </form><!-- End Horizontal -->
+                    </div>
+                  </div>
+                </div>
+              </div><!-- End Accordion without outline borders -->
+
+            </div>
+          </div>
+
+        </div>
+{% endblock %}
+
+{% block custom_js %}
+<script>
+  $(document).ready(function(){
+    $("#mat_form").submit(function(e){
+      e.preventDefault();
+      $.ajax({
+        type: "POST",
+        url: "/matiere/",
+        data: $(this).serialize(),
+        success: function(data){
+          if(data.success){
+            console.log("avant alert");
+            alert("Matiere créee avec succes");
+            $("#mat_form")[0].reset();
+            console.log("après alert et reset");
+          }
+          else if(data.exists.length > 0){
+            console.log(data.exists);
+          }
+       }
+      })
+    });
+  });
+</script>
+{% endblock %}

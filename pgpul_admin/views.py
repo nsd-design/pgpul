@@ -78,6 +78,7 @@ def create_department(request):
 
     return redirect('departement')
 
+
 def create_classe(request):
     if request.method == "POST":
         # Verifier la classe existe dans la db
@@ -99,3 +100,26 @@ def create_classe(request):
             return JsonResponse({"errors": class_form.errors})
 
     return redirect('departement')
+
+
+def create_matiere(request):
+    form_matiere = MatiereForm()
+
+    if request.method == "POST":
+        form = MatiereForm(request.POST)
+        if form.is_valid():
+            user = request.user
+            nom_mat = form.cleaned_data['nom_mat']
+            classe_mat = form.cleaned_data['classe_mat']
+            dept_mat = form.cleaned_data['dept_mat']
+
+            new_matiere = Matiere.objects.create(
+                nom_mat=nom_mat, classe_mat=classe_mat, dept_mat=dept_mat, created_by=user
+            )
+
+            new_matiere.save()
+            return JsonResponse({"success": True})
+        else:
+            return JsonResponse({"errors": form.errors})
+
+    return render(request, template_model+"matiere.html", context={"form": form_matiere})
