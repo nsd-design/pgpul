@@ -12,11 +12,22 @@ def dashboard(request):
 
 
 def departement(request):
+    # Les Formulaires des 3 models Faculte, Departement et Classe
     fac_form = FaculteForm()  # Formulaire pour la Faculte
     dept_form = DepartementForm()  # Formulaire pour le Departement
     classe_form = ClassForm()  # Formulaire pour le Departement
+    # ==============================================
 
-    context = {"fac_form": fac_form, "dept_form": dept_form, "classe_form": classe_form}
+    # Generer la liste des enregistrements de Faculte, Departement et Classe
+    facultes = Faculte.objects.all().order_by("code_fac")
+    departements = Departement.objects.all().order_by("dept_fac")
+    classes = Classe.objects.all().order_by("designation")
+    
+
+    context = {
+        "fac_form": fac_form, "dept_form": dept_form, "classe_form": classe_form,
+        "facultes": facultes, "departements": departements, "classes": classes
+    }
     
     return render(request, template_model + "departement.html", context=context)
 

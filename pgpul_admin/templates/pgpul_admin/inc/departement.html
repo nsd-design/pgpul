@@ -117,58 +117,30 @@
             <div class="col-12">
               <div class="card">
                 <div class="card-body">
-                  <h5 class="card-title">Table with stripped rows</h5>
+                  <h5 class="card-title">Liste des Facultés</h5>
 
-                  <!-- Table with stripped rows -->
+                  <!-- Table Faculté -->
                   <table class="table table-striped">
                     <thead>
                       <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Position</th>
-                        <th scope="col">Age</th>
-                        <th scope="col">Start Date</th>
+                        <th scope="col">Nom de la Faculté</th>
+                        <th scope="col">Code de la Faculté</th>
+                        {% comment %} <th scope="col">Age</th>
+                        <th scope="col">Start Date</th> {% endcomment %}
                       </tr>
                     </thead>
                     <tbody>
+                      {% for fac in facultes %}
                       <tr>
                         <th scope="row">1</th>
-                        <td>Brandon Jacob</td>
-                        <td>Designer</td>
-                        <td>28</td>
-                        <td>2016-05-25</td>
+                        <td>{{ fac.nom_fac }}</td>
+                        <td>{{ fac.code_fac }}</td>
                       </tr>
-                      <tr>
-                        <th scope="row">2</th>
-                        <td>Bridie Kessler</td>
-                        <td>Developer</td>
-                        <td>35</td>
-                        <td>2014-12-05</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">3</th>
-                        <td>Ashleigh Langosh</td>
-                        <td>Finance</td>
-                        <td>45</td>
-                        <td>2011-08-12</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">4</th>
-                        <td>Angus Grady</td>
-                        <td>HR</td>
-                        <td>34</td>
-                        <td>2012-06-11</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">5</th>
-                        <td>Raheem Lehner</td>
-                        <td>Dynamic Division Officer</td>
-                        <td>47</td>
-                        <td>2011-04-19</td>
-                      </tr>
+                      {% endfor %}
                     </tbody>
                   </table>
-                  <!-- End Table with stripped rows -->
+                  <!-- End Table Faculté -->
 
                 </div>
               </div>
@@ -180,58 +152,30 @@
             <div class="col-12">
               <div class="card">
                 <div class="card-body">
-                  <h5 class="card-title">Table with stripped rows</h5>
+                  <h5 class="card-title">Liste des Département</h5>
 
-                  <!-- Table with stripped rows -->
+                  <!-- Table Départements -->
                   <table class="table table-striped">
                     <thead>
                       <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Position</th>
-                        <th scope="col">Age</th>
-                        <th scope="col">Start Date</th>
+                        <th scope="col">Nom du Département</th>
+                        <th scope="col">Code du Département</th>
+                        <th scope="col">Faculté</th>
                       </tr>
                     </thead>
                     <tbody>
+                      {% for dept in departements%}
                       <tr>
                         <th scope="row">1</th>
-                        <td>Brandon Jacob</td>
-                        <td>Designer</td>
-                        <td>28</td>
-                        <td>2016-05-25</td>
+                        <td>{{ dept.nom_dept}}</td>
+                        <td>{{ dept.code_dept}}</td>
+                        <td>{{ dept.dept_fac}}</td>
                       </tr>
-                      <tr>
-                        <th scope="row">2</th>
-                        <td>Bridie Kessler</td>
-                        <td>Developer</td>
-                        <td>35</td>
-                        <td>2014-12-05</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">3</th>
-                        <td>Ashleigh Langosh</td>
-                        <td>Finance</td>
-                        <td>45</td>
-                        <td>2011-08-12</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">4</th>
-                        <td>Angus Grady</td>
-                        <td>HR</td>
-                        <td>34</td>
-                        <td>2012-06-11</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">5</th>
-                        <td>Raheem Lehner</td>
-                        <td>Dynamic Division Officer</td>
-                        <td>47</td>
-                        <td>2011-04-19</td>
-                      </tr>
+                      {% endfor %}
                     </tbody>
                   </table>
-                  <!-- End Table with stripped rows -->
+                  <!-- End Table Départements -->
 
                 </div>
               </div>
@@ -243,58 +187,26 @@
             <div class="col-12">
               <div class="card">
                 <div class="card-body">
-                  <h5 class="card-title">Table with stripped rows</h5>
+                  <h5 class="card-title">Liste des Classes</h5>
 
-                  <!-- Table with stripped rows -->
+                  <!-- Table Classes -->
                   <table class="table table-striped">
                     <thead>
                       <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Position</th>
-                        <th scope="col">Age</th>
-                        <th scope="col">Start Date</th>
+                        <th scope="col">Designation de la Classe</th>
                       </tr>
                     </thead>
                     <tbody>
+                      {% for classe in classes%}
                       <tr>
                         <th scope="row">1</th>
-                        <td>Brandon Jacob</td>
-                        <td>Designer</td>
-                        <td>28</td>
-                        <td>2016-05-25</td>
+                        <td>{{ classe.designation }}</td>
                       </tr>
-                      <tr>
-                        <th scope="row">2</th>
-                        <td>Bridie Kessler</td>
-                        <td>Developer</td>
-                        <td>35</td>
-                        <td>2014-12-05</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">3</th>
-                        <td>Ashleigh Langosh</td>
-                        <td>Finance</td>
-                        <td>45</td>
-                        <td>2011-08-12</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">4</th>
-                        <td>Angus Grady</td>
-                        <td>HR</td>
-                        <td>34</td>
-                        <td>2012-06-11</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">5</th>
-                        <td>Raheem Lehner</td>
-                        <td>Dynamic Division Officer</td>
-                        <td>47</td>
-                        <td>2011-04-19</td>
-                      </tr>
+                      {% endfor %}
                     </tbody>
                   </table>
-                  <!-- End Table with stripped rows -->
+                  <!-- End Table Classes -->
 
                 </div>
               </div>
