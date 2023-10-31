@@ -76,6 +76,9 @@ class Matiere(UserInfos):
     dept_mat = models.ForeignKey(Departement, on_delete=models.CASCADE)
     enseigne_par = models.ManyToManyField(Utilisateur, blank=True)
 
+    def __str__(self):
+        return f"{self.nom_mat} - {self.classe_mat}"
+
 
 class supportCours(UserInfos):
     designation_support = models.FileField(verbose_name="", upload_to="documents")
