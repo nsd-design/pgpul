@@ -7,12 +7,12 @@ Utilisateur = settings.AUTH_USER_MODEL
 
 
 class UserInfos(models.Model):
-    created_by = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True,
-                                   blank=True, related_name="created_by_user")
+    created_by = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL,
+                                   null=True, related_name="created_by_user")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_by = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True,
                                    blank=True, related_name="updated_by_user")
-    updated_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(blank=True, null=True)
 
 
 # class Enseignant(UserInfos):
@@ -42,6 +42,8 @@ class Departement(UserInfos):
     code_dept = models.IntegerField(unique=True)
     dept_fac = models.ForeignKey(Faculte, on_delete=models.CASCADE, related_name="faculte_departement")
 
+    def __str__(self):
+        return f"{self.nom_dept} - {self.code_dept}"
 
 # class Matricule(UserInfos):
 #     categories = [(1, "Enseignant"), (2, "Etudiant")]
@@ -64,12 +66,18 @@ class Departement(UserInfos):
 class Classe(UserInfos):
     designation = models.CharField(max_length=40, unique=True)
 
+    def __str__(self):
+        return f"{self.designation}"
+
 
 class Matiere(UserInfos):
     nom_mat = models.CharField(max_length=40)
     classe_mat = models.ForeignKey(Classe, on_delete=models.CASCADE)
     dept_mat = models.ForeignKey(Departement, on_delete=models.CASCADE)
-    enseigne_par = models.ManyToManyField(Utilisateur)
+    enseigne_par = models.ManyToManyField(Utilisateur, blank=True)
+
+    def __str__(self):
+        return f"{self.nom_mat} - {self.classe_mat}"
 
 
 class supportCours(UserInfos):

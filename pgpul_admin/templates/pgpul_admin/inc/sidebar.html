@@ -12,12 +12,12 @@
 
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-menu-button-wide"></i><span>Cours</span><i class="bi bi-chevron-down ms-auto"></i>
+          <i class="bi bi-menu-button-wide"></i><span>Matieres</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
-            <a href="#">
-              <i class="bi bi-circle"></i><span>Alerts</span>
+            <a href="{% url 'matiere' %}">
+              <i class="bi bi-circle"></i><span>matières</span>
             </a>
           </li>
         </ul>
@@ -56,7 +56,7 @@
         </a>
         <ul id="departement" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
-            <a href="#">
+            <a href="{% url 'departement' %}">
               <i class="bi bi-circle"></i><span>Départements</span>
             </a>
           </li>
