@@ -80,13 +80,13 @@
           </h2>
           <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
             <div class="accordion-body">
-              <!-- Horizontal Form -->
-              <form method="POST" action="{% url 'matiere' %}" id="form_attr_mat">
+              <!-- Attribution Form -->
+              <form method="POST" action="{% url 'attribution' %}" id="form_attr_mat">
                 {% csrf_token %}
                 <div class="row mb-3">
                   <label class="col-sm-2 col-form-label">Departements</label>
                   <div class="col-sm-10">
-                    <select class="form-select" aria-label="Default select example" id="depart_select">
+                    <select class="form-select" name="departement" aria-label="Default select example" id="depart_select">
                       <option value="-1">Selectionnez un departement</option>
                       {% for departement in departements %}
                       <option value="{{ departement.id }}">{{ departement.nom_dept }}</option>
@@ -97,7 +97,7 @@
                 <div class="row mb-3">
                   <label class="col-sm-2 col-form-label">Classes</label>
                   <div class="col-sm-10">
-                    <select class="form-select" aria-label="Default select example" id="classe_select">
+                    <select class="form-select" name="classe" aria-label="Default select example" id="classe_select">
                       <option value="-1">Selectionnez une classe</option>
                       {% for classe in liste_classes %}
                       <option value="{{ classe.id }}">{{ classe.designation }}</option>
@@ -109,7 +109,7 @@
                 <div class="row mb-3">
                   <label class="col-sm-2 col-form-label">Matières</label>
                   <div class="col-sm-10">
-                    <select class="form-select" aria-label="Default select example" id="mat_select">
+                    <select class="form-select" name="matiere" aria-label="Default select example" id="mat_select">
                       <option>Selectionnez une matière</option>
                       {% for matiere in matieres %}
                       <option value="{{ matiere }}">{{ matiere }}</option>
@@ -120,7 +120,7 @@
                 <div class="row mb-3">
                   <label class="col-sm-2 col-form-label">Enseignants</label>
                   <div class="col-sm-10">
-                    <select class="form-select" multiple aria-label="multiple select example" id="enseignant_select">
+                    <select class="form-select" name="enseignant" multiple aria-label="multiple select example" id="enseignant_select">
                       <option>-------------</option>
                     </select>
                   </div>
@@ -129,14 +129,14 @@
 
                 <div class="text-center">
                   <button type="submit" class="btn btn-primary px-5">
-                    Créer
+                    Valider
                   </button>
                   <button type="reset" class="btn btn-secondary">
                     Annuler
                   </button>
                 </div>
               </form>
-              <!-- End Horizontal -->
+              <!-- End Attribution Form -->
             </div>
           </div>
         </div>
@@ -169,7 +169,11 @@
             <td>{{ matiere.nom_mat }}</td>
             <td>{{ matiere.classe_mat }}</td>
             <td>{{ matiere.dept_mat }}</td>
-            <td>{{ matiere.ensigne_par }}</td>
+            <td>
+              {% for mat in matiere.enseigne_par %}
+                <span class="badge rounded-pill bg-light text-dark">{{ mat }}</span>
+              {% endfor %}
+            </td>
           </tr>
           {% endfor %}
         </tbody>

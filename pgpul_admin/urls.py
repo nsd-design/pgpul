@@ -9,4 +9,5 @@ urlpatterns = [
     path("departement/classe/", create_classe, name="classe"),
     path("matiere/", create_matiere, name="matiere"),
     path("matiere/get_departement/", matiere_par_departement, name="matiere_par_dept"),
+    path("matiere/attribution/", attribuer_matiere_a_pro, name="attribution"),
 ]
