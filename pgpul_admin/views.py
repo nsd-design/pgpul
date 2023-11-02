@@ -108,8 +108,23 @@ def create_matiere(request):
     form_matiere = MatiereForm()
     #  Liste des departements
     departements = Departement.objects.all().order_by("dept_fac")
+
     # Liste des matieres
+    list_matieres = []
     matieres = Matiere.objects.all().order_by('dept_mat')
+
+    for matiere in matieres:
+        mat = Matiere.objects.get(pk=matiere.pk)
+        enseignant = mat.enseigne_par.all()
+        list_enseignant = [ens for ens in enseignant]
+        current_matiere = {
+            "nom_mat": matiere.nom_mat,
+            "classe_mat": matiere.classe_mat,
+            "dept_mat": matiere.dept_mat,
+            "enseigne_par": list_enseignant
+        }
+        list_matieres.append(current_matiere)
+
     #  Liste des classes
     liste_classes = get_list_or_404(Classe)
 
@@ -129,7 +144,7 @@ def create_matiere(request):
             return JsonResponse({"success": True})
         else:
             return JsonResponse({"errors": form.errors})
-    context = {"form": form_matiere, "matieres": matieres, "departements": departements,
+    context = {"form": form_matiere, "matieres": list_matieres, "departements": departements,
                "liste_classes": liste_classes}
     return render(request, template_model+"matiere.html", context=context)
 
@@ -140,7 +155,7 @@ def matiere_par_departement(request):
         id_dept = request.GET.get('departement')
         id_classe = request.GET.get('classe')
 
-        id_classe = id_classe if id_classe is not -1 else 0
+        id_classe = id_classe if id_classe != -1 else 0
 
         matiere_par_dept = Matiere.objects.filter(dept_mat=id_dept, classe_mat=id_classe)
         enseignant_par_dept = get_list_or_404(Utilisateur, departement=id_dept)
@@ -158,3 +173,21 @@ def matiere_par_departement(request):
         liste_matieres = liste_matieres if liste_matieres else None
         liste_enseignants = liste_enseignants if liste_enseignants else None
     return JsonResponse({"liste_matieres": liste_matieres, "liste_enseignants": liste_enseignants})
+
+
+def attribuer_matiere_a_pro(request):
+    if request.method == "POST":
+        departements = request.POST['departement']
+        classe = request.POST['classe']
+        id_matiere = request.POST['matiere']
+        enseignant = request.POST.getlist('enseignant')
+
+        if id_matiere and len(enseignant) > 0:
+            matiere = Matiere.objects.get(id=id_matiere)
+            if matiere:
+                matiere.enseigne_par.set(enseignant)
+                matiere.save()
+                print("attribution effectuéee")
+
+    return redirect("matiere")
+
