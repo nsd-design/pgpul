@@ -111,9 +111,7 @@
                   <div class="col-sm-10">
                     <select class="form-select" name="matiere" aria-label="Default select example" id="mat_select">
                       <option>Selectionnez une matière</option>
-                      {% for matiere in matieres %}
-                      <option value="{{ matiere }}">{{ matiere }}</option>
-                      {% endfor %}
+
                     </select>
                   </div>
                 </div>
@@ -225,7 +223,7 @@
               $('#mat_select').empty();  // Nettoyer les anciennes valeurs
               $.each(data.liste_matieres, function (key, value) {
                   $('#mat_select')
-                      .append($('<option>', { value: key })
+                      .append($('<option>', { value: value.id })
                       .text(value));
               });
             }else{

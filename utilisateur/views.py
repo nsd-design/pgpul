@@ -31,36 +31,37 @@ def deconnexion(request):
     return redirect('connexion')
 
 
-# def inscription(request):
-#     if request.method == "POST":
-#
-#         form = InscriptionForm(request.POST)
-#
-#         if form.is_valid():
-#             first_name = form.cleaned_data['first_name']
-#             last_name = form.cleaned_data['last_name']
-#             email = form.cleaned_data['email']
-#             password = form.cleaned_data['password']
-#             matricule = form.cleaned_data['matricule']
-#             username = form.cleaned_data['username']
-#
-#             confirm_password = request.POST['confirm_password']
-#             if password == confirm_password:
-#                 new_user = Utilisateur.objects.create_user(
-#                     first_name=first_name, last_name=last_name, email=email,
-#                     password=password, matricule=matricule, username=username
-#                 )
-#                 new_user.save()
-#                 messages.success(request, "Votre compte a été créé avec succès !")
-#                 return JsonResponse({'success': "Votre compte a été créé avec succès !"})
-#             else:
-#                 messages.error(request, "Les deux mots de passe doivent être identiques")
-#                 return JsonResponse({'errors': 'Erreur de mot de passe'})
-#         else:
-#             messages.error(request, "Veuillez renseigner tous les champs du formulaire")
-#             print("Error", form.errors)
-#             return JsonResponse({'errors': "Veuillez renseigner tous les champs du formulaire"})
-#
-#     else:
-#         form = InscriptionForm()
-#         return render(request, temp+"inscription.html", context={'form': form})
+def inscription(request):
+    pass
+    # if request.method == "POST":
+    #
+    #     form = InscriptionForm(request.POST)
+    #
+    #     if form.is_valid():
+    #         first_name = form.cleaned_data['first_name']
+    #         last_name = form.cleaned_data['last_name']
+    #         email = form.cleaned_data['email']
+    #         password = form.cleaned_data['password']
+    #         matricule = form.cleaned_data['matricule']
+    #         username = form.cleaned_data['username']
+    #
+    #         confirm_password = request.POST['confirm_password']
+    #         if password == confirm_password:
+    #             new_user = Utilisateur.objects.create_user(
+    #                 first_name=first_name, last_name=last_name, email=email,
+    #                 password=password, matricule=matricule, username=username
+    #             )
+    #             new_user.save()
+    #             messages.success(request, "Votre compte a été créé avec succès !")
+    #             return JsonResponse({'success': "Votre compte a été créé avec succès !"})
+    #         else:
+    #             messages.error(request, "Les deux mots de passe doivent être identiques")
+    #             return JsonResponse({'errors': 'Erreur de mot de passe'})
+    #     else:
+    #         messages.error(request, "Veuillez renseigner tous les champs du formulaire")
+    #         print("Error", form.errors)
+    #         return JsonResponse({'errors': "Veuillez renseigner tous les champs du formulaire"})
+    #
+    # else:
+    #     form = InscriptionForm()
+    #     return render(request, temp+"inscription.html", context={'form': form})
