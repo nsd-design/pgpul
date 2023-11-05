@@ -1,7 +1,6 @@
 from django.urls import path
 
-from utilisateur.views import inscription, connexion, deconnexion
-
+from utilisateur.views import connexion, deconnexion, inscription
 urlpatterns = [
     path('signup/', inscription, name='signup'),
     path('login/', connexion, name='connexion'),
