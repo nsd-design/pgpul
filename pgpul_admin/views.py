@@ -7,6 +7,7 @@ from pgpul_admin.models import *
 from utilisateur.models import Utilisateur
 
 template_model = "pgpul_admin/inc/"
+template_path = "pgpul_admin/pages/"
 
 
 def dashboard(request):
@@ -191,3 +192,58 @@ def attribuer_matiere_a_pro(request):
 
     return redirect("matiere")
 
+
+def enseignant(request):
+    form = EnseignantForm()
+    enseignants = Enseignant.objects.all().order_by('last_name')
+    if request.method == "POST":
+        form = EnseignantForm(request.POST)
+        if form.is_valid():
+            user = request.user
+            first_name = form.cleaned_data['first_name']
+            last_name = form.cleaned_data['last_name']
+            email = form.cleaned_data['email']
+            tel = form.cleaned_data['tel_ens']
+            sepecialite = form.cleaned_data['specialite_ens']
+            departement_principal = form.cleaned_data['departement_principal']
+            adresse_en = form.cleaned_data['adresse_en']
+            genre_ens = form.cleaned_data['genre_ens']
+
+            new_enseignant = Enseignant.objects.create(
+                first_name=first_name,
+                last_name=last_name,
+                email=email,
+                tel_ens=tel,
+                specialite_ens=sepecialite,
+                departement_principal=departement_principal,
+                adresse_en=adresse_en,
+                genre_ens=genre_ens,
+                created_by=user
+            )
+            new_enseignant.save()
+            return JsonResponse({"success": True})
+        else:
+            return JsonResponse({"errors": form.errors})
+
+    context = {"form": form, "enseignants": enseignants}
+    return render(request, template_path+"enseignant.html", context=context)
+
+
+def liste_enseignants(request):
+    if request.method == "GET":
+        liste_des_enseignants = []
+        enseignants = Enseignant.objects.all()
+        for ens in enseignants:
+            teacher = {
+                'id': ens.id,
+                'first_name': ens.first_name,
+                'last_name': ens.last_name,
+                'email': ens.email,
+                'tel_ens': ens.tel_ens,
+                'specialite_ens': ens.specialite_ens,
+                'departement_principal': ens.departement_principal.nom_dept,
+                'adresse_en': ens.adresse_en,
+                'genre_ens': ens.genre_ens
+            }
+            liste_des_enseignants.append(teacher)
+        return JsonResponse({"liste_enseignants": liste_des_enseignants})
