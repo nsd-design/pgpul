@@ -95,3 +95,23 @@ class MatiereForm(forms.ModelForm):
     class Meta:
         model = Matiere
         fields = ['nom_mat', 'classe_mat', 'dept_mat']
+
+
+class EnseignantForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(EnseignantForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.fields['first_name'].required = True
+        self.fields['last_name'].required = True
+        self.fields['email'].required = True
+
+        # Supprimer les labels
+        for field_name, field in self.fields.items():
+            field.label = ''
+
+    class Meta:
+        model = Enseignant
+        fields = ["genre_ens", "tel_ens", "specialite_ens",
+                  "departement_principal", "adresse_en",
+                  "first_name", "last_name", "email"
+                  ]
