@@ -2,10 +2,168 @@
 {% load static %}
 {% load crispy_forms_tags %}
 {% block content %}
-    <h1>Enseigant</h1>
+
+<section class="section">
+    <div class="row">
+        <div class="col-12">
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Enregistrement des Enseignants</h5>
+
+                    <!-- Accordion without outline borders -->
+                    <div class="accordion accordion-flush" id="accordionFlushExample">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="flush-headingOne">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#flush-collapseOne" aria-expanded="false"
+                                        aria-controls="flush-collapseOne">
+                                    Créer un nouveau Enseignant
+                                </button>
+                            </h2>
+                            <div id="flush-collapseOne" class="accordion-collapse collapse"
+                                 aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                                <div class="accordion-body">
+                                    <form method="POST" action="{% url 'enseignant' %}" id="form_enseignant">
+                                        {% csrf_token %}
+                                        <div class="row mb-3">
+                                            <label for="id_first_name" class="col-sm-2 col-form-label">Prénom</label>
+                                            <div class="col-sm-10">
+                                                {{ form.first_name | as_crispy_field }}
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label for="id_last_name" class="col-sm-2 col-form-label">Nom</label>
+                                            <div class="col-sm-10">
+                                                {{ form.last_name | as_crispy_field }}
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label for="id_last_name" class="col-sm-2 col-form-label">Genre</label>
+                                            <div class="col-sm-10">
+                                                {{ form.genre_ens | as_crispy_field }}
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label for="id_email" class="col-sm-2 col-form-label">Email</label>
+                                            <div class="col-sm-10">
+                                                {{ form.email | as_crispy_field }}
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label for="id_tel_ens" class="col-sm-2 col-form-label">Téléphone</label>
+                                            <div class="col-sm-10">
+                                                {{ form.tel_ens | as_crispy_field }}
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label for="id_specialite_ens"
+                                                   class="col-sm-2 col-form-label">Specialité</label>
+                                            <div class="col-sm-10">
+                                                {{ form.specialite_ens | as_crispy_field }}
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label for="id_departement_principal" class="col-sm-2 col-form-label">Département</label>
+                                            <div class="col-sm-10">
+                                                {{ form.departement_principal | as_crispy_field }}
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label for="id_adresse_en" class="col-sm-2 col-form-label">Adresse</label>
+                                            <div class="col-sm-10">
+                                                {{ form.adresse_en | as_crispy_field }}
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-sm-10">
+                                                <button type="submit" class="btn btn-primary">Enregistrer</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--Liste des Enseignants-->
+        <div class="col-12">
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Liste des Enseignants</h5>
+
+                    <!-- Table Enseignants -->
+                    <table class="table table-striped" id="tab_enseignants">
+                        <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Nom et Prénom</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Téléphone</th>
+                            <th scope="col">Specialité</th>
+                            <th scope="col">Département</th>
+                            <th scope="col">Adresse</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                    <!-- End Table with stripped rows -->
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</section>
+
 {% endblock content %}
 
 {% block custom_js %}
 <script>
+    $(document).ready(function () {
+        <!-- Get liste Enseignants -->
+        $.ajax({
+            url: "/enseignant/liste/",
+            dataType: "json",
+            type: "GET",
+            success: function (data) {
+                var tab_enseignants = $("#tab_enseignants tbody");
+                $.each(data.liste_enseignants, function(index, item){
+                    tab_enseignants.append(`
+                    <tr>
+                        <td scope="row">${index += 1}</td>
+                        <td>${item.last_name} ${item.first_name}</td>
+                        <td>${item.email}</td>
+                        <td>${item.tel_ens}</td>
+                        <td>${item.specialite_ens}</td>
+                        <td>${item.departement_principal}</td>
+                        <td>${item.adresse_en}</td>
+                    </tr>
+                    `)
+                })
+            },
+        });
+
+<!--        Soumission du formulaire d'enregistrement d'un nouveau Enseignant-->
+        $('#form_enseignant').submit(function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: $(this).attr('action'),
+                type: $(this).attr('method'),
+                data: $(this).serialize(),
+                success: function (data) {
+                    alert("Enseignant créé avec succès");
+                    $("#form_enseignant")[0].reset();
+                }
+            });
+        });
+    });
 </script>
 {% endblock %}
