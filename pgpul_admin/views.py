@@ -158,17 +158,18 @@ def matiere_par_departement(request):
         id_classe = id_classe if id_classe != -1 else 0
 
         matiere_par_dept = Matiere.objects.filter(dept_mat=id_dept, classe_mat=id_classe)
-        enseignant_par_dept = get_list_or_404(Utilisateur, departement=id_dept)
-        liste_matieres = dict([(matiere.id, matiere.nom_mat) for matiere in matiere_par_dept])
+        enseignants = get_list_or_404(Enseignant)
+        liste_matieres = [{'id': matiere.id, 'matiere': matiere.nom_mat} for matiere in matiere_par_dept]
 
         liste_enseignants = [
             {
                 'id': enseignant.id,
                 'username': enseignant.username,
                 'first_name': enseignant.first_name,
-                'last_name': enseignant.last_name
+                'last_name': enseignant.last_name,
+                'departement_principal': enseignant.departement_principal.nom_dept,
             }
-            for enseignant in enseignant_par_dept
+            for enseignant in enseignants
         ]
         liste_matieres = liste_matieres if liste_matieres else None
         liste_enseignants = liste_enseignants if liste_enseignants else None
@@ -177,8 +178,6 @@ def matiere_par_departement(request):
 
 def attribuer_matiere_a_pro(request):
     if request.method == "POST":
-        departements = request.POST['departement']
-        classe = request.POST['classe']
         id_matiere = request.POST['matiere']
         enseignant = request.POST.getlist('enseignant')
 
