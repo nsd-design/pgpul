@@ -113,5 +113,22 @@ class EnseignantForm(forms.ModelForm):
         model = Enseignant
         fields = ["genre_ens", "tel_ens", "specialite_ens",
                   "departement_principal", "adresse_en",
-                  "first_name", "last_name", "email"
+                  "first_name", "last_name", "email", "username"
                   ]
+
+
+class EtudiantForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(EtudiantForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+
+        # Supprimer les labels
+        for field_name, field in self.fields.items():
+            field.label = ''
+
+    class Meta:
+        model = Etudiant
+        fields = [
+            "matricule", "genre_etd", "tel_etd", "departement_etd", "username",
+            "first_name", "last_name", "email"
+        ]

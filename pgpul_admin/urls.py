@@ -12,4 +12,6 @@ urlpatterns = [
     path("matiere/attribution/", attribuer_matiere_a_pro, name="attribution"),
     path("enseignant/", enseignant, name="enseignant"),
     path("enseignant/liste/", liste_enseignants, name="list_enseignants"),
+    path("etudiant/", create_etudiant, name="etudiant"),
+    path("etudiant/liste/", liste_etudiants, name="liste_etudiant"),
 ]

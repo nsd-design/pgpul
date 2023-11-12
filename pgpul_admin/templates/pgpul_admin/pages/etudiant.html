@@ -9,7 +9,7 @@
 
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Enregistrement des Enseignants</h5>
+                    <h5 class="card-title">Enregistrement des Etudiants</h5>
 
                     <!-- Accordion without outline borders -->
                     <div class="accordion accordion-flush" id="accordionFlushExample">
@@ -18,14 +18,20 @@
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                         data-bs-target="#flush-collapseOne" aria-expanded="false"
                                         aria-controls="flush-collapseOne">
-                                    Créer un nouveau Enseignant
+                                    Créer un nouveau Etudiant
                                 </button>
                             </h2>
                             <div id="flush-collapseOne" class="accordion-collapse collapse"
                                  aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
                                 <div class="accordion-body">
-                                    <form method="POST" action="{% url 'enseignant' %}" id="form_enseignant">
+                                    <form method="POST" action="{% url 'etudiant' %}" id="form_etudiant">
                                         {% csrf_token %}
+                                        <div class="row mb-3">
+                                            <label for="id_matricule" class="col-sm-2 col-form-label">Matricule</label>
+                                            <div class="col-sm-10">
+                                                {{ form.matricule | as_crispy_field }}
+                                            </div>
+                                        </div>
                                         <div class="row mb-3">
                                             <label for="id_first_name" class="col-sm-2 col-form-label">Prénom</label>
                                             <div class="col-sm-10">
@@ -39,9 +45,9 @@
                                             </div>
                                         </div>
                                         <div class="row mb-3">
-                                            <label for="id_last_name" class="col-sm-2 col-form-label">Genre</label>
+                                            <label for="id_genre_etd" class="col-sm-2 col-form-label">Genre</label>
                                             <div class="col-sm-10">
-                                                {{ form.genre_ens | as_crispy_field }}
+                                                {{ form.genre_etd | as_crispy_field }}
                                             </div>
                                         </div>
                                         <div class="row mb-3">
@@ -57,30 +63,19 @@
                                             </div>
                                         </div>
                                         <div class="row mb-3">
-                                            <label for="id_tel_ens" class="col-sm-2 col-form-label">Téléphone</label>
+                                            <label for="id_tel_etd" class="col-sm-2 col-form-label">Téléphone</label>
                                             <div class="col-sm-10">
-                                                {{ form.tel_ens | as_crispy_field }}
+                                                {{ form.tel_etd | as_crispy_field }}
                                             </div>
                                         </div>
+
                                         <div class="row mb-3">
-                                            <label for="id_specialite_ens"
-                                                   class="col-sm-2 col-form-label">Specialité</label>
+                                            <label for="id_departement_etd" class="col-sm-2 col-form-label">Département</label>
                                             <div class="col-sm-10">
-                                                {{ form.specialite_ens | as_crispy_field }}
+                                                {{ form.departement_etd | as_crispy_field }}
                                             </div>
                                         </div>
-                                        <div class="row mb-3">
-                                            <label for="id_departement_principal" class="col-sm-2 col-form-label">Département</label>
-                                            <div class="col-sm-10">
-                                                {{ form.departement_principal | as_crispy_field }}
-                                            </div>
-                                        </div>
-                                        <div class="row mb-3">
-                                            <label for="id_adresse_en" class="col-sm-2 col-form-label">Adresse</label>
-                                            <div class="col-sm-10">
-                                                {{ form.adresse_en | as_crispy_field }}
-                                            </div>
-                                        </div>
+
                                         <div class="row mb-3">
                                             <div class="col-sm-10">
                                                 <button type="submit" class="btn btn-primary">Enregistrer</button>
@@ -103,16 +98,15 @@
                     <h5 class="card-title">Liste des Enseignants</h5>
 
                     <!-- Table Enseignants -->
-                    <table class="table table-striped" id="tab_enseignants">
+                    <table class="table table-striped" id="tab_etudiants">
                         <thead>
                         <tr>
                             <th scope="col">#</th>
+                            <th scope="col">Matricule</th>
                             <th scope="col">Nom et Prénom</th>
-                            <th scope="col">Email</th>
                             <th scope="col">Téléphone</th>
-                            <th scope="col">Specialité</th>
+                            <th scope="col">Genre</th>
                             <th scope="col">Département</th>
-                            <th scope="col">Adresse</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -136,37 +130,37 @@
     $(document).ready(function () {
         <!-- Get liste Enseignants -->
         $.ajax({
-            url: "/enseignant/liste/",
+            url: "/etudiant/liste/",
             dataType: "json",
             type: "GET",
             success: function (data) {
-                var tab_enseignants = $("#tab_enseignants tbody");
-                $.each(data.liste_enseignants, function(index, item){
-                    tab_enseignants.append(`
+
+                var tab_etudiants = $("#tab_etudiants tbody");
+                $.each(data.list_etudiants, function(index, item){
+                    tab_etudiants.append(`
                     <tr>
                         <td scope="row">${index += 1}</td>
+                        <td>${item.matricule}</td>
                         <td>${item.last_name} ${item.first_name}</td>
-                        <td>${item.email}</td>
-                        <td>${item.tel_ens}</td>
-                        <td>${item.specialite_ens}</td>
-                        <td>${item.departement_principal}</td>
-                        <td>${item.adresse_en}</td>
+                        <td>${item.tel_etd}</td>
+                        <td>${item.genre_etd}</td>
+                        <td>${item.departement_etd}</td>
                     </tr>
                     `)
                 })
             },
         });
 
-<!--        Soumission du formulaire d'enregistrement d'un nouveau Enseignant-->
-        $('#form_enseignant').submit(function (e) {
+<!--        Soumission du formulaire d'enregistrement d'un nouveau Etudiant-->
+        $('#form_etudiant').submit(function (e) {
             e.preventDefault();
             $.ajax({
                 url: $(this).attr('action'),
                 type: $(this).attr('method'),
                 data: $(this).serialize(),
                 success: function (data) {
-                    alert("Enseignant créé avec succès");
-                    $("#form_enseignant")[0].reset();
+                    alert("Etudiant créé avec succès");
+                    $("#form_etudiant")[0].reset();
                 }
             });
         });
