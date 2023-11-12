@@ -113,5 +113,5 @@ class EnseignantForm(forms.ModelForm):
         model = Enseignant
         fields = ["genre_ens", "tel_ens", "specialite_ens",
                   "departement_principal", "adresse_en",
-                  "first_name", "last_name", "email"
+                  "first_name", "last_name", "email", "username"
                   ]

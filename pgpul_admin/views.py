@@ -203,6 +203,7 @@ def enseignant(request):
             first_name = form.cleaned_data['first_name']
             last_name = form.cleaned_data['last_name']
             email = form.cleaned_data['email']
+            username = form.cleaned_data['username']
             tel = form.cleaned_data['tel_ens']
             sepecialite = form.cleaned_data['specialite_ens']
             departement_principal = form.cleaned_data['departement_principal']
@@ -213,6 +214,7 @@ def enseignant(request):
                 first_name=first_name,
                 last_name=last_name,
                 email=email,
+                username=username,
                 tel_ens=tel,
                 specialite_ens=sepecialite,
                 departement_principal=departement_principal,
@@ -239,6 +241,7 @@ def liste_enseignants(request):
                 'first_name': ens.first_name,
                 'last_name': ens.last_name,
                 'email': ens.email,
+                'username': ens.username,
                 'tel_ens': ens.tel_ens,
                 'specialite_ens': ens.specialite_ens,
                 'departement_principal': ens.departement_principal.nom_dept,
