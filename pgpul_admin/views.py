@@ -1,3 +1,4 @@
+from django.core.serializers import serialize
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_list_or_404
 
@@ -250,3 +251,51 @@ def liste_enseignants(request):
             }
             liste_des_enseignants.append(teacher)
         return JsonResponse({"liste_enseignants": liste_des_enseignants})
+
+
+def create_etudiant(request):
+    form = EtudiantForm()
+
+    if request.method == "POST":
+        form_etd = EtudiantForm(request.POST)
+        if form_etd.is_valid():
+            first_name = form_etd.cleaned_data['first_name']
+            last_name = form_etd.cleaned_data['last_name']
+            username = form_etd.cleaned_data['username']
+            matricule = form_etd.cleaned_data['matricule']
+            genre_etd = form_etd.cleaned_data['genre_etd']
+            tel_etd = form_etd.cleaned_data['tel_etd']
+            departement_etd = form_etd.cleaned_data['departement_etd']
+
+            user = request.user
+            new_etudiant = Etudiant.objects.create(
+                first_name=first_name,
+                last_name=last_name,
+                username=username,
+                matricule=matricule,
+                genre_etd=genre_etd,
+                tel_etd=tel_etd,
+                departement_etd=departement_etd,
+                created_by=user
+            )
+
+            new_etudiant.save()
+            return JsonResponse({'success': True})
+        else:
+            return JsonResponse({'errors': form_etd.errors})
+    context = {'form': form}
+    return render(request, template_path+"etudiant.html", context=context)
+
+
+def liste_etudiants(request):
+    if request.method == "GET":
+        etudiants = Etudiant.objects.all().order_by('departement_etd')
+        json_data = serialize('json', etudiants)
+
+        list_etudiants = [{'first_name': etd.first_name, 'last_name': etd.last_name,
+                           'usemail': etd.username, 'matricule': etd.matricule,
+                           'genre_etd': etd.get_genre_etd_display(), 'tel_etd': etd.tel_etd,
+                           'departement_etd': etd.departement_etd.nom_dept
+                           } for etd in etudiants]
+
+        return JsonResponse({"list_etudiants": list_etudiants})

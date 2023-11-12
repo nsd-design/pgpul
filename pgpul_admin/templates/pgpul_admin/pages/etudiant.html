@@ -1,0 +1,169 @@
+{% extends "../../pgpul_admin/base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<section class="section">
+    <div class="row">
+        <div class="col-12">
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Enregistrement des Etudiants</h5>
+
+                    <!-- Accordion without outline borders -->
+                    <div class="accordion accordion-flush" id="accordionFlushExample">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="flush-headingOne">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#flush-collapseOne" aria-expanded="false"
+                                        aria-controls="flush-collapseOne">
+                                    Créer un nouveau Etudiant
+                                </button>
+                            </h2>
+                            <div id="flush-collapseOne" class="accordion-collapse collapse"
+                                 aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                                <div class="accordion-body">
+                                    <form method="POST" action="{% url 'etudiant' %}" id="form_etudiant">
+                                        {% csrf_token %}
+                                        <div class="row mb-3">
+                                            <label for="id_matricule" class="col-sm-2 col-form-label">Matricule</label>
+                                            <div class="col-sm-10">
+                                                {{ form.matricule | as_crispy_field }}
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label for="id_first_name" class="col-sm-2 col-form-label">Prénom</label>
+                                            <div class="col-sm-10">
+                                                {{ form.first_name | as_crispy_field }}
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label for="id_last_name" class="col-sm-2 col-form-label">Nom</label>
+                                            <div class="col-sm-10">
+                                                {{ form.last_name | as_crispy_field }}
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label for="id_genre_etd" class="col-sm-2 col-form-label">Genre</label>
+                                            <div class="col-sm-10">
+                                                {{ form.genre_etd | as_crispy_field }}
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label for="id_email" class="col-sm-2 col-form-label">Email</label>
+                                            <div class="col-sm-10">
+                                                {{ form.email | as_crispy_field }}
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label for="id_username" class="col-sm-2 col-form-label">nom d'utilisateur</label>
+                                            <div class="col-sm-10">
+                                                {{ form.username | as_crispy_field }}
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label for="id_tel_etd" class="col-sm-2 col-form-label">Téléphone</label>
+                                            <div class="col-sm-10">
+                                                {{ form.tel_etd | as_crispy_field }}
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <label for="id_departement_etd" class="col-sm-2 col-form-label">Département</label>
+                                            <div class="col-sm-10">
+                                                {{ form.departement_etd | as_crispy_field }}
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <div class="col-sm-10">
+                                                <button type="submit" class="btn btn-primary">Enregistrer</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--Liste des Enseignants-->
+        <div class="col-12">
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Liste des Enseignants</h5>
+
+                    <!-- Table Enseignants -->
+                    <table class="table table-striped" id="tab_etudiants">
+                        <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Matricule</th>
+                            <th scope="col">Nom et Prénom</th>
+                            <th scope="col">Téléphone</th>
+                            <th scope="col">Genre</th>
+                            <th scope="col">Département</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                    <!-- End Table with stripped rows -->
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</section>
+
+{% endblock content %}
+
+{% block custom_js %}
+<script>
+    $(document).ready(function () {
+        <!-- Get liste Enseignants -->
+        $.ajax({
+            url: "/etudiant/liste/",
+            dataType: "json",
+            type: "GET",
+            success: function (data) {
+
+                var tab_etudiants = $("#tab_etudiants tbody");
+                $.each(data.list_etudiants, function(index, item){
+                    tab_etudiants.append(`
+                    <tr>
+                        <td scope="row">${index += 1}</td>
+                        <td>${item.matricule}</td>
+                        <td>${item.last_name} ${item.first_name}</td>
+                        <td>${item.tel_etd}</td>
+                        <td>${item.genre_etd}</td>
+                        <td>${item.departement_etd}</td>
+                    </tr>
+                    `)
+                })
+            },
+        });
+
+<!--        Soumission du formulaire d'enregistrement d'un nouveau Etudiant-->
+        $('#form_etudiant').submit(function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: $(this).attr('action'),
+                type: $(this).attr('method'),
+                data: $(this).serialize(),
+                success: function (data) {
+                    alert("Etudiant créé avec succès");
+                    $("#form_etudiant")[0].reset();
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}
