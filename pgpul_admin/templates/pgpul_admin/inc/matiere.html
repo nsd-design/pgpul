@@ -224,7 +224,7 @@
               $.each(data.liste_matieres, function (key, value) {
                   $('#mat_select')
                       .append($('<option>', { value: value.id })
-                      .text(value));
+                      .text(value.matiere));
               });
             }else{
               $('#mat_select').empty();  // Nettoyer les anciennes valeurs
@@ -234,7 +234,7 @@
               $.each(data.liste_enseignants, function (key, value) {
                   $('#enseignant_select')
                       .append($('<option>', { value: value.id })
-                      .text(value.username));
+                      .text(`${value.first_name} ${value.last_name} - ${value.departement_principal}`));
               });
             }else{
               $('#enseignant_select').empty();  // Nettoyer les anciennes valeurs
