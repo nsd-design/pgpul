@@ -298,3 +298,38 @@ def liste_etudiants(request):
                            } for etd in etudiants]
 
         return JsonResponse({"list_etudiants": list_etudiants})
+
+
+def cours(request):
+    form = CoursForm()
+
+    if request.method == 'POST':
+        cours_form = CoursForm(request.POST, request.FILES)
+        title = request.POST.get('titre')
+        contenu = request.POST.get('contenu')
+
+        print("titre:", title, "contenu:", contenu)
+
+    context = {"form": form}
+    return render(request, template_path+"cours.html", context=context)
+
+
+def create_sommaire(request):
+    form = SommaireForm()
+
+    if request.method == "POST":
+        form_sommaire = SommaireForm(request.POST)
+        if form_sommaire.is_valid():
+            # title = form_sommaire.cleaned_data["titre"]
+            titres = request.POST.getlist("titre")
+            matiere = form_sommaire.cleaned_data["matiere"]
+
+            for titre in titres:
+                new_sommaire = Sommaire.objects.create(
+                    titre=titre, matiere=matiere, created_by=request.user
+                )
+                new_sommaire.save()
+
+            return JsonResponse({"success": True, "msg": "Nouveau chapitre ajouté à la table des matières avec succès"})
+    context = {"form": form}
+    return render(request, template_path+"sommaire.html", context=context)
