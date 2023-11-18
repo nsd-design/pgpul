@@ -120,6 +120,7 @@ def create_matiere(request):
         enseignant = mat.enseigne_par.all()
         list_enseignant = [ens for ens in enseignant]
         current_matiere = {
+            "id": matiere.id,
             "nom_mat": matiere.nom_mat,
             "classe_mat": matiere.classe_mat,
             "dept_mat": matiere.dept_mat,
@@ -146,8 +147,9 @@ def create_matiere(request):
             return JsonResponse({"success": True})
         else:
             return JsonResponse({"errors": form.errors})
+    form_sommaire = SommaireForm()
     context = {"form": form_matiere, "matieres": list_matieres, "departements": departements,
-               "liste_classes": liste_classes}
+               "liste_classes": liste_classes, "form_sommaire": form_sommaire}
     return render(request, template_model+"matiere.html", context=context)
 
 
@@ -316,20 +318,25 @@ def cours(request):
 
 def create_sommaire(request):
     form = SommaireForm()
-
     if request.method == "POST":
-        form_sommaire = SommaireForm(request.POST)
-        if form_sommaire.is_valid():
-            # title = form_sommaire.cleaned_data["titre"]
-            titres = request.POST.getlist("titre")
-            matiere = form_sommaire.cleaned_data["matiere"]
+        id_matiere = request.POST["id-de-la-matiere"]
 
-            for titre in titres:
-                new_sommaire = Sommaire.objects.create(
-                    titre=titre, matiere=matiere, created_by=request.user
-                )
-                new_sommaire.save()
+        if id_matiere:
+            try:
+                matiere = Matiere.objects.get(id=id_matiere)
 
-            return JsonResponse({"success": True, "msg": "Nouveau chapitre ajouté à la table des matières avec succès"})
+                titres = request.POST.getlist("titre")
+
+                for titre in titres:
+                    new_sommaire = Sommaire.objects.create(
+                        titre=titre, matiere=matiere, created_by=request.user
+                    )
+                    new_sommaire.save()
+            except Exception:
+                return JsonResponse({"errors": True, "msg": "Erreur lors de la creation"})
+        else:
+            return JsonResponse({"errors": True, "msg": "Veuillez specifier une matiere"})
+
+        return JsonResponse({"success": True, "msg": "Nouveau chapitre ajouté à la table des matières avec succès"})
     context = {"form": form}
     return render(request, template_path+"sommaire.html", context=context)

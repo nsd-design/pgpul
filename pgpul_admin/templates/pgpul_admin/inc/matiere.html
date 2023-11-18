@@ -172,6 +172,14 @@
                 <span class="badge rounded-pill bg-light text-dark">{{ mat }}</span>
               {% endfor %}
             </td>
+            <td>
+              <button type="button" data-id-matiere="{{ matiere.id }}" data-nom-matiere="{{ matiere.nom_mat}}"
+                      class="btn btn-outline-info matiere"
+                      data-bs-toggle="modal" data-bs-target="#addSommaire" title="ajouter un programme"
+              >
+                <i class="ri-file-list-2-line"></i>
+              </button>
+            </td>
           </tr>
           {% endfor %}
         </tbody>
@@ -181,9 +189,77 @@
   </div>
 </div>
 
+<!-- Modal Ajout Sommaire -->
+<div class="modal fade" id="addSommaire" tabindex="-1" data-bs-backdrop="false">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Création de la Table des matières</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <h5 class="card-title" id="nom-matiere">nom de la matiere</h5>
+        <form method="POST" action="{% url 'sommaire' %}" id="form_sommaire">
+          {% csrf_token %}
+
+          <div class="row mb-3" id="nom-de-la-matiere" hidden>
+            <div class="col-10">
+              <input type="hidden" id="matiere-value" value="" name="id-de-la-matiere" class="form-control">
+            </div>
+          </div>
+
+          <div class="col-12 d-flex justify-content-end mb-2">
+            <button type="button" id="add-title-field" class="btn btn-outline-info add-title-field">
+              <i class="ri-add-circle-line"></i>
+            </button>
+          </div>
+          <div class="row mb-3 rm-title-group title_group" id="">
+            <label class="col-12 col-form-label">Entrez le chapitre</label>
+            <div class="d-flex">
+              <div class="col-10">
+                <input type="text" name="titre" required class="form-control" placeholder="ex: chapitre I: Les variables">
+              </div>
+              <div class="col-2">
+                <button type="button" class="btn btn-outline-danger ms-3 remove-title-field">
+                  <i class="ri-close-circle-line "></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-sm-10">
+              <button type="submit" class="btn btn-primary">Créer</button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="fermer" data-bs-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div><!-- End Modal Ajout Sommaire-->
+
 {% endblock %} {% block custom_js %}
 <script>
   $(document).ready(function () {
+
+    <!-- Dupliquer le groupe d'elements du champ Titre-->
+    $("#add-title-field").click(function () {
+        var title_field = $(".title_group:first");
+        var new_title_field = title_field.clone(true);
+
+        <!-- Ajouter le champ dupliquer dans le DOM-->
+        $(".title_group:first").before(new_title_field);
+
+        if($(".remove-title-field").prop("disabled", true)){
+          $(".remove-title-field").prop("disabled", false);
+        }
+
+    });
+
+
     $("#mat_form").submit(function (e) {
       e.preventDefault();
       $.ajax({
@@ -257,6 +333,61 @@
         $("#depart_select").trigger("change");
       }
     });
+
+    <!-- Recuperer l'id et le nom de la matiere cliquée-->
+    $(".matiere").click(function(e){
+      <!-- Trouver l'element parent -->
+      const button = $(e.target).closest(".matiere");
+
+      <!-- Recuperer la valeur de data-id-matiere -->
+      var id_matiere = button.data('id-matiere');
+      var matiere = button.data('nom-matiere');
+      console.log(id_matiere)
+      $("#matiere-value").val(id_matiere);
+      $("#nom-matiere").text(matiere);
+    })
+
+    <!-- Supprimer un champ Titre -->
+    $(".remove-title-field").click(function(event){
+
+      const title_group = $(event.target).closest(".rm-title-group");
+
+      var list_title_group = $(".rm-title-group");
+      console.log(list_title_group)
+      if(list_title_group.length == 1){
+        console.log("length = 1")
+        $(".remove-title-field").prop("disabled", true);
+      }else{
+        $(".remove-title-field").prop("disabled", false);
+        title_group.remove();
+      }
+    });
+
+    <!-- Soumission du formulaire de creation d'un nouveau Sommaire -->
+    $('#form_sommaire').submit(function (e) {
+        e.preventDefault();
+        $.ajax({
+            url: $(this).attr('action'),
+            type: $(this).attr('method'),
+            data: $(this).serialize(),
+            success: function (data) {
+                console.log(data);
+                alert(data.msg);
+                $(".titre").val("");
+            },
+            error: function (error){
+              if(error.errors){
+                alert(error.msg)
+              }
+            }
+        });
+    });
+
+    <!--    Reinitialiser le formulaire a la fermuture du modal-->
+    $("#fermer").on("click", function(){
+      $("#form_sommaire")[0].reset();
+    });
+
   });
 </script>
 {% endblock %}
