@@ -307,12 +307,18 @@ def cours(request):
 
     if request.method == 'POST':
         cours_form = CoursForm(request.POST, request.FILES)
-        title = request.POST.get('titre')
-        contenu = request.POST.get('contenu')
+        if cours_form.is_valid():
+            title = cours_form.cleaned_data['titre']
+            contenu = cours_form.cleaned_data['contenu']
+            sommaire = cours_form.cleaned_data['sommaire']
 
-        print("titre:", title, "contenu:", contenu)
+            new_course = Cours.objects.create(
+                titre=title, contenu=contenu, sommaire=sommaire, created_by=request.user
+            )
+            new_course.save()
 
-    context = {"form": form}
+    list_cours = Cours.objects.all()
+    context = {"form": form, "list_cours": list_cours}
     return render(request, template_path+"cours.html", context=context)
 
 

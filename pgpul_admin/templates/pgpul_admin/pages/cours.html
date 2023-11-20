@@ -36,6 +36,12 @@
                                             </div>
                                         </div>
                                         <div class="row mb-3">
+                                            <label for="id_titre" class="col-sm-2 col-form-label">Sommaire</label>
+                                            <div class="col-sm-10">
+                                                {{ form.sommaire | as_crispy_field }}
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
                                             <div class="col-12">
                                                 {{ form.contenu | as_crispy_field }}
                                             </div>
@@ -75,7 +81,18 @@
                         </tr>
                         </thead>
                         <tbody>
+                            <tr>
+                                <td>test</td>
 
+                            <td>
+                                {% for cours in  list_cours %}
+                                {{ cours.titre }}
+                                {% autoescape off %}
+                                {{ cours.contenu }}
+                                {% endautoescape %}
+                                {% endfor %}
+                            </td>
+                            </tr>
                         </tbody>
                     </table>
                     <!-- End Table with stripped rows -->
@@ -94,27 +111,27 @@
 <script>
     $(document).ready(function () {
         <!-- Get liste Enseignants -->
-        $.ajax({
-            url: "/etudiant/liste/",
-            dataType: "json",
-            type: "GET",
-            success: function (data) {
+<!--        $.ajax({-->
+<!--            url: "/etudiant/liste/",-->
+<!--            dataType: "json",-->
+<!--            type: "GET",-->
+<!--            success: function (data) {-->
 
-                var tab_etudiants = $("#tab_etudiants tbody");
-                $.each(data.list_etudiants, function(index, item){
-                    tab_etudiants.append(`
-                    <tr>
-                        <td scope="row">${index += 1}</td>
-                        <td>${item.matricule}</td>
-                        <td>${item.last_name} ${item.first_name}</td>
-                        <td>${item.tel_etd}</td>
-                        <td>${item.genre_etd}</td>
-                        <td>${item.departement_etd}</td>
-                    </tr>
-                    `)
-                })
-            },
-        });
+<!--                var tab_etudiants = $("#tab_etudiants tbody");-->
+<!--                $.each(data.list_etudiants, function(index, item){-->
+<!--                    tab_etudiants.append(`-->
+<!--                    <tr>-->
+<!--                        <td scope="row">${index += 1}</td>-->
+<!--                        <td>${item.matricule}</td>-->
+<!--                        <td>${item.last_name} ${item.first_name}</td>-->
+<!--                        <td>${item.tel_etd}</td>-->
+<!--                        <td>${item.genre_etd}</td>-->
+<!--                        <td>${item.departement_etd}</td>-->
+<!--                    </tr>-->
+<!--                    `)-->
+<!--                })-->
+<!--            },-->
+<!--        });-->
 
 <!--        Soumission du formulaire d'enregistrement d'un nouveau Etudiant-->
         $('#form_cou').submit(function (e) {
