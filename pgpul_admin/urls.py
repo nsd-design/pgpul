@@ -14,4 +14,6 @@ urlpatterns = [
     path("enseignant/liste/", liste_enseignants, name="list_enseignants"),
     path("etudiant/", create_etudiant, name="etudiant"),
     path("etudiant/liste/", liste_etudiants, name="liste_etudiant"),
+    path("cours/", cours, name="cours"),
+    path("sommaire/", create_sommaire, name="sommaire"),
 ]
