@@ -156,6 +156,9 @@ class Cours(models.Model):
                                    related_name="cours_updated_by")
     updated_at = models.DateTimeField(blank=True, null=True)
 
+    def __str__(self):
+        return f"{self.titre} {self.sommaire}"
+
 
 class supportCours(models.Model):
     status = [
