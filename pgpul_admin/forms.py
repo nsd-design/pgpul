@@ -1,6 +1,7 @@
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field
 from django import forms
+from tinymce.widgets import TinyMCE
 
 from pgpul_admin.models import *
 from utilisateur.models import Utilisateur
@@ -132,3 +133,40 @@ class EtudiantForm(forms.ModelForm):
             "matricule", "genre_etd", "tel_etd", "departement_etd", "username",
             "first_name", "last_name", "email"
         ]
+
+
+class SommaireForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(SommaireForm, self).__init__(*args, **kwargs)
+        self.fields['titre'].widget.attrs['placeholder'] = "ex: chapitre I: Les variables"
+        self.fields['titre'].widget.attrs['class'] = "titre"
+
+        # Supprimer les labels
+        for field_name, field in self.fields.items():
+            field.label = ''
+
+    class Meta:
+        model = Sommaire
+        fields = ['titre', 'matiere']
+
+
+class TinyMCEWidget(TinyMCE):
+    def use_required_attribute(self, *args):
+        return False
+
+
+class CoursForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(CoursForm, self).__init__(*args, **kwargs)
+        contenu = forms.CharField(widget=TinyMCEWidget(
+            attrs={"required": False, "cols": 30, "rows": 20}
+        ))
+        self.fields['sommaire'].required = True
+
+        # Supprimer les labels
+        for field_name, field in self.fields.items():
+            field.label = ''
+
+    class Meta:
+        model = Cours
+        fields = ['titre', 'contenu', 'sommaire']

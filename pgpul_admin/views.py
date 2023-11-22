@@ -120,6 +120,7 @@ def create_matiere(request):
         enseignant = mat.enseigne_par.all()
         list_enseignant = [ens for ens in enseignant]
         current_matiere = {
+            "id": matiere.id,
             "nom_mat": matiere.nom_mat,
             "classe_mat": matiere.classe_mat,
             "dept_mat": matiere.dept_mat,
@@ -146,8 +147,9 @@ def create_matiere(request):
             return JsonResponse({"success": True})
         else:
             return JsonResponse({"errors": form.errors})
+    form_sommaire = SommaireForm()
     context = {"form": form_matiere, "matieres": list_matieres, "departements": departements,
-               "liste_classes": liste_classes}
+               "liste_classes": liste_classes, "form_sommaire": form_sommaire}
     return render(request, template_model+"matiere.html", context=context)
 
 
@@ -298,3 +300,72 @@ def liste_etudiants(request):
                            } for etd in etudiants]
 
         return JsonResponse({"list_etudiants": list_etudiants})
+
+
+def cours(request):
+    form = CoursForm()
+
+    if request.method == 'POST':
+        cours_form = CoursForm(request.POST, request.FILES)
+        if cours_form.is_valid():
+            title = cours_form.cleaned_data['titre']
+            contenu = cours_form.cleaned_data['contenu']
+            sommaire = cours_form.cleaned_data['sommaire']
+
+            new_course = Cours.objects.create(
+                titre=title, contenu=contenu, sommaire=sommaire, created_by=request.user
+            )
+            new_course.save()
+
+    list_cours = Cours.objects.all()
+    context = {"form": form, "list_cours": list_cours}
+    return render(request, template_path+"cours.html", context=context)
+
+
+def create_sommaire(request):
+    form = SommaireForm()
+    if request.method == "POST":
+        id_matiere = request.POST["id-de-la-matiere"]
+
+        if id_matiere:
+            try:
+                matiere = Matiere.objects.get(id=id_matiere)
+
+                titres = request.POST.getlist("titre")
+
+                for titre in titres:
+                    new_sommaire = Sommaire.objects.create(
+                        titre=titre, matiere=matiere, created_by=request.user
+                    )
+                    new_sommaire.save()
+            except Exception:
+                return JsonResponse({"errors": True, "msg": "Erreur lors de la creation"})
+        else:
+            return JsonResponse({"errors": True, "msg": "Veuillez specifier une matiere"})
+
+        return JsonResponse({"success": True, "msg": "Nouveau chapitre ajouté à la table des matières avec succès"})
+    context = {"form": form}
+    return render(request, template_path+"sommaire.html", context=context)
+
+
+def afficher_table_matieres(request, id_matiere):
+    if request.method == "GET":
+        form = CoursForm()
+
+        id_matiere = int(id_matiere)
+        list_sommaire_et_cours = []
+        sommaire_maitere = Sommaire.objects.filter(id=id_matiere)
+        titre_cours = Cours.objects.filter(sommaire__in=sommaire_maitere)
+
+        for sm in sommaire_maitere:
+            cours = Cours.objects.filter(sommaire=sm.id).values("titre")
+            sommaire_et_cours = {
+                "chapitre": sm.titre,
+                "titre_cours": cours
+            }
+            list_sommaire_et_cours.append(sommaire_et_cours)
+
+        print("liste sommaire cours", list_sommaire_et_cours)
+
+        context = {"form": form, "list_sommaire_et_cours": list_sommaire_et_cours, "sommaire_maitere": sommaire_maitere}
+        return render(request, template_path+"table_des_matieres.html", context=context)
