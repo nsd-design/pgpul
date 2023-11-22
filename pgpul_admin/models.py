@@ -140,6 +140,9 @@ class Sommaire(models.Model):
                                    related_name="sommaire_updated_by")
     updated_at = models.DateTimeField(blank=True, null=True)
 
+    def __str__(self):
+        return f"{self.matiere} | {self.titre}"
+
 
 class Cours(models.Model):
     titre = models.CharField(max_length=200)
@@ -152,6 +155,9 @@ class Cours(models.Model):
     updated_by = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True,
                                    related_name="cours_updated_by")
     updated_at = models.DateTimeField(blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.titre} {self.sommaire}"
 
 
 class supportCours(models.Model):

@@ -10,6 +10,7 @@ urlpatterns = [
     path("matiere/", create_matiere, name="matiere"),
     path("matiere/get_departement/", matiere_par_departement, name="matiere_par_dept"),
     path("matiere/attribution/", attribuer_matiere_a_pro, name="attribution"),
+    path("matiere/table_matiere/<int:id_matiere>", afficher_table_matieres, name="table_matiere"),
     path("enseignant/", enseignant, name="enseignant"),
     path("enseignant/liste/", liste_enseignants, name="list_enseignants"),
     path("etudiant/", create_etudiant, name="etudiant"),

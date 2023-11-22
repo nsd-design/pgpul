@@ -179,6 +179,11 @@
               >
                 <i class="ri-file-list-2-line"></i>
               </button>
+              <a href="{% url 'table_matiere' matiere.id %}" class="btn btn-outline-info matiere"
+                  title="afficher la table des matières"
+              >
+                <i class="ri-arrow-right-s-line"></i>
+              </a>
             </td>
           </tr>
           {% endfor %}

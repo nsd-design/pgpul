@@ -1,0 +1,183 @@
+{% extends "../../pgpul_admin/base.html" %}
+{% block custom_header %}
+    <script src="https://cdn.tiny.cloud/1/n0ati5nj5n82d0xtpuzzbk3armgy8ldroeiqtxpvpjcsanfc"></script>
+{% endblock %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<section class="section">
+    <div class="row">
+        <div class="col-12">
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Création de la Table des matières</h5>
+
+                    <!-- Accordion Table des matieres -->
+                    <div class="accordion accordion-flush" id="accordionFlushExample">
+                        {% for titre in list_sommaire_et_cours %}
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="flush-headingOne">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#flush-collapseOne" aria-expanded="false"
+                                        aria-controls="flush-collapseOne">
+                                    {{titre.chapitre}}
+                                </button>
+                            </h2>
+                            <div id="flush-collapseOne" class="accordion-collapse collapse"
+                                 aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                                <div class="accordion-body">
+
+                                    {% for cours in titre.titre_cours %}
+                                        <ul>
+                                            <li>
+                                                {{ cours.titre }}
+                                            </li>
+                                        </ul>
+
+                                    {% endfor %}
+
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--Table des Matières-->
+        <div class="col-12">
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Liste des Enseignants</h5>
+
+                    <!-- Table Enseignants -->
+                    <table class="table table-striped" id="tab_etudiants">
+                        <thead>
+                        <tr>
+                            <th scope="col">CHAPITRES</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            {% for sommaire in sommaire_maitere %}
+                            <tr>
+                                <td>
+                                    {{ sommaire.titre }}
+                                </td>
+                                <td>
+                                    <!-- Lancer le Modal ajout Cours-->
+                                    <button type="button" data-bs-toggle="modal" data-bs-target="#ajoutCours" data-sommaire-id="{{ sommaire.id }}" data-sommaire-titre="{{ sommaire.titre }}" data-matiere="{{ sommaire.matiere }}"
+                                      class="btn btn-outline-info matiere" title="ajouter le cours"
+                                      >
+                                        <i class="ri-add-circle-line"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <!-- End Table with stripped rows -->
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal fade" id="ajoutCours" tabindex="-1" data-bs-backdrop="false">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="matiere">Disabled Backdrop</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <h5 class="text-center fw-bold " id="titre-sommaire">chapitre</h5>
+
+                    <form method="POST" action="{% url 'cours' %}" id="form_cours" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row mb-3">
+                            <label for="id_titre" class="col-sm-2 col-form-label">Titre du cours</label>
+                            <div class="col-sm-10">
+                                {{ form.titre | as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-10">
+                                <input type="hidden" name="sommaire" value="" id="sommaire_value">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                {{ form.contenu | as_crispy_field }}
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-sm-10">
+                                <button type="submit" class="btn btn-primary">Enregistrer</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div><!-- End Disabled Backdrop Modal-->
+
+</section>
+
+{% endblock content %}
+
+{% block custom_js %}
+<script>
+    $(document).ready(function () {
+        <!-- Recuperer l'id et le nom de la matiere cliquée-->
+        $(".matiere").click(function(e){
+          <!-- Trouver l'element parent -->
+          const button = $(e.target).closest(".matiere");
+
+          <!-- Recuperer la valeur de data-sommaire-id -->
+          var sommaire_id = button.data('sommaire-id');
+
+          var matiere = button.data('matiere');
+          console.log(sommaire_id)
+
+          <!-- Recuperer la valeur de data-sommaire-titre -->
+          var sommaire_titre = button.data('sommaire-titre');
+          $("#titre-sommaire").text(sommaire_titre);
+          $("#matiere").text(matiere);
+        })
+
+<!--        Soumission du formulaire de creation d'un nouveau Sommaire-->
+<!--        $('#form_sommaire').submit(function (e) {-->
+<!--            e.preventDefault();-->
+<!--            $.ajax({-->
+<!--                url: $(this).attr('action'),-->
+<!--                type: $(this).attr('method'),-->
+<!--                data: $(this).serialize(),-->
+<!--                success: function (data) {-->
+<!--                    console.log(data);-->
+<!--                    alert(data.msg);-->
+<!--                    $(".titre").val("");-->
+<!--                }-->
+<!--            });-->
+<!--        });-->
+    });
+</script>
+<!-- Initialisation de TinyMCE -->
+<script>
+  tinymce.init({
+    selector: 'textarea',
+    plugins: 'ai tinycomments mentions anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed permanentpen footnotes advtemplate advtable advcode editimage tableofcontents mergetags powerpaste tinymcespellchecker autocorrect a11ychecker typography inlinecss',
+    toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | align lineheight | tinycomments | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+    tinycomments_mode: 'embedded',
+  });
+</script>
+{% endblock %}
