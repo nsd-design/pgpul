@@ -306,20 +306,23 @@ def cours(request):
     form = CoursForm()
 
     if request.method == 'POST':
-        cours_form = CoursForm(request.POST, request.FILES)
-        if cours_form.is_valid():
-            title = cours_form.cleaned_data['titre']
-            contenu = cours_form.cleaned_data['contenu']
-            sommaire = cours_form.cleaned_data['sommaire']
+        sommaire_id = request.POST.get('sommaire')
 
-            new_course = Cours.objects.create(
-                titre=title, contenu=contenu, sommaire=sommaire, created_by=request.user
-            )
-            new_course.save()
+        sommaire = Sommaire.objects.get(id=int(sommaire_id))
+        if not sommaire:
+            return JsonResponse({"error": True, "msg": "Ce chapitre n'existe pas dans la table des matieres"})
 
-    list_cours = Cours.objects.all()
-    context = {"form": form, "list_cours": list_cours}
-    return render(request, template_path+"cours.html", context=context)
+        titre = request.POST.get('titre')
+        contenu = request.POST.get('contenu')
+
+        new_course = Cours.objects.create(
+            titre=titre, contenu=contenu, sommaire=sommaire, created_by=request.user
+        )
+        new_course.save()
+
+        # list_cours = Cours.objects.all()
+        # context = {"form": form, "list_cours": list_cours}
+        return JsonResponse({"success": True})
 
 
 def create_sommaire(request):
@@ -353,19 +356,8 @@ def afficher_table_matieres(request, id_matiere):
         form = CoursForm()
 
         id_matiere = int(id_matiere)
-        list_sommaire_et_cours = []
+        nom_matiere = Matiere.objects.get(id=id_matiere)
         sommaire_maitere = Sommaire.objects.filter(id=id_matiere)
-        titre_cours = Cours.objects.filter(sommaire__in=sommaire_maitere)
 
-        for sm in sommaire_maitere:
-            cours = Cours.objects.filter(sommaire=sm.id).values("titre")
-            sommaire_et_cours = {
-                "chapitre": sm.titre,
-                "titre_cours": cours
-            }
-            list_sommaire_et_cours.append(sommaire_et_cours)
-
-        print("liste sommaire cours", list_sommaire_et_cours)
-
-        context = {"form": form, "list_sommaire_et_cours": list_sommaire_et_cours, "sommaire_maitere": sommaire_maitere}
+        context = {"form": form, "sommaire_maitere": sommaire_maitere, "nom_matiere": nom_matiere}
         return render(request, template_path+"table_des_matieres.html", context=context)
