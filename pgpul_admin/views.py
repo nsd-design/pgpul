@@ -361,3 +361,31 @@ def afficher_table_matieres(request, id_matiere):
 
         context = {"form": form, "sommaire_maitere": sommaire_maitere, "nom_matiere": nom_matiere}
         return render(request, template_path+"table_des_matieres.html", context=context)
+
+
+def liste_des_cours(request):
+    user = request.user
+    liste_cours = ""
+    #  Si user est un enseignant
+    liste_cours = Cours.objects.filter(created_by=user)
+    # print("liste cours", liste_cours)
+
+    #  Si user est un etudiant
+    dept_etd = Etudiant.objects.get(id=7)
+    departement = dept_etd.departement_etd
+    matieres_by_departement = Matiere.objects.filter(dept_mat=departement)
+
+    #  Recuperer les matieres et les enseignants qui enseignent chacune des matieres
+    list_matieres = []
+    for matiere in matieres_by_departement:
+        mat = Matiere.objects.get(pk=matiere.pk)
+        enseignant = mat.enseigne_par.all()
+        list_enseignant = [ens for ens in enseignant]
+        current_matiere = {
+            "id_matiere": matiere.id,
+            "nom_mat": matiere.nom_mat,
+            "enseigne_par": list_enseignant,
+        }
+        list_matieres.append(current_matiere)
+    context = {"list_matieres": list_matieres, "departement": departement.nom_dept}
+    return render(request, template_path+"liste_cours.html", context)
