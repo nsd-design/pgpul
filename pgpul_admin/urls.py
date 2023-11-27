@@ -16,6 +16,7 @@ urlpatterns = [
     path("etudiant/", create_etudiant, name="etudiant"),
     path("etudiant/liste/", liste_etudiants, name="liste_etudiant"),
     path("cours/", cours, name="cours"),
-    path("cours/liste/", liste_des_cours, name="liste_cours"),
+    path("cours/liste/", liste_des_matieres, name="liste_cours"),
+    path("cours/sommaire/<int:id_matiere>", sommaire_par_matiere, name="sommaire_par_matiere"),
     path("sommaire/", create_sommaire, name="sommaire"),
 ]

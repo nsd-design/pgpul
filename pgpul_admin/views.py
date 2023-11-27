@@ -1,4 +1,5 @@
 from django.core.serializers import serialize
+from django.db.models import Count
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_list_or_404
 
@@ -363,7 +364,7 @@ def afficher_table_matieres(request, id_matiere):
         return render(request, template_path+"table_des_matieres.html", context=context)
 
 
-def liste_des_cours(request):
+def liste_des_matieres(request):
     user = request.user
     liste_cours = ""
     #  Si user est un enseignant
@@ -389,3 +390,20 @@ def liste_des_cours(request):
         list_matieres.append(current_matiere)
     context = {"list_matieres": list_matieres, "departement": departement.nom_dept}
     return render(request, template_path+"liste_cours.html", context)
+
+
+def sommaire_par_matiere(request, id_matiere):
+    sommaire_matiere = Sommaire.objects.filter(matiere=id_matiere)
+    matiere = Matiere.objects.get(id=id_matiere)
+    titres_cours = []
+
+    for sommaire in sommaire_matiere:
+        liste_cours = Cours.objects.filter(sommaire=sommaire)
+        current_sommaire = {
+            "sommaire": sommaire.id,
+            "sommaire_titre": sommaire.titre,
+            "titre_cours": [current_cours for current_cours in liste_cours]
+        }
+        titres_cours.append(current_sommaire)
+    context = {"sommaire_et_cours": titres_cours, "matiere": matiere}
+    return render(request, template_path+"sommaire_par_matiere.html", context)
