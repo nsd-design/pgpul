@@ -389,7 +389,7 @@ def liste_des_matieres(request):
         }
         list_matieres.append(current_matiere)
     context = {"list_matieres": list_matieres, "departement": departement.nom_dept}
-    return render(request, template_path+"liste_cours.html", context)
+    return render(request, template_path+"liste_des_matieres.html", context)
 
 
 def sommaire_par_matiere(request, id_matiere):
@@ -407,3 +407,11 @@ def sommaire_par_matiere(request, id_matiere):
         titres_cours.append(current_sommaire)
     context = {"sommaire_et_cours": titres_cours, "matiere": matiere}
     return render(request, template_path+"sommaire_par_matiere.html", context)
+
+
+def affiche_contenu_cours(request, id_cours, id_matiere):
+
+    cours = Cours.objects.get(id=id_cours)
+
+    context = {'cours': cours, 'id_matiere': id_matiere}
+    return render(request, template_path+"cours.html", context)
