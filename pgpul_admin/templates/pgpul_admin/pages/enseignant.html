@@ -165,7 +165,13 @@
                 type: $(this).attr('method'),
                 data: $(this).serialize(),
                 success: function (data) {
-                    alert("Enseignant créé avec succès");
+                    Swal.fire({
+                      position: "top-end",
+                      icon: "success",
+                      title: data.msg,
+                      showConfirmButton: false,
+                      timer: 2500
+                    });
                     $("#form_enseignant")[0].reset();
                 }
             });

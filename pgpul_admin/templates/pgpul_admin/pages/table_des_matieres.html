@@ -1,6 +1,11 @@
 {% extends "../../pgpul_admin/base.html" %}
+{% load static %}
 {% block custom_header %}
     <script src="https://cdn.tiny.cloud/1/n0ati5nj5n82d0xtpuzzbk3armgy8ldroeiqtxpvpjcsanfc"></script>
+<!-- Toastr -->
+<script src="{% static 'assets/js/toastr.min.js' %}"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.css" integrity="sha512-oe8OpYjBaDWPt2VmSFR+qYOdnTjeV9QPLJUeqZyprDEQvQLJ9C5PCFclxwNuvb/GQgQngdCXzKSFltuHD3eCxA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js" integrity="sha512-lbwH47l/tPXJYG9AcFNoJaTMhGvYWhVM9YI43CT+uteTRRaiLCui8snIgyAN8XWgNjNhCqlAUdzZptso6OCoFQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 {% endblock %}
 {% load static %}
 {% load crispy_forms_tags %}
@@ -8,7 +13,10 @@
 
 <section class="section">
     <div class="row">
-
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    A simple success alert—check it out!
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
         <!--Retour a la Table des Matières-->
         <div class="col-12">
             <a href="{% url 'matiere' %}">
@@ -149,5 +157,8 @@
     toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | align lineheight | tinycomments | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
     tinycomments_mode: 'embedded',
   });
+</script>
+<script>
+    toastr.info('Are you the 6 fingered man?')
 </script>
 {% endblock %}
