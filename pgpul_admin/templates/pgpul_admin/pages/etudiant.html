@@ -159,7 +159,13 @@
                 type: $(this).attr('method'),
                 data: $(this).serialize(),
                 success: function (data) {
-                    alert("Etudiant créé avec succès");
+                    Swal.fire({
+                      position: "top-end",
+                      icon: "success",
+                      title: data.msg,
+                      showConfirmButton: false,
+                      timer: 2500
+                    });
                     $("#form_etudiant")[0].reset();
                 }
             });

@@ -1,7 +1,5 @@
 {% extends "../../pgpul_admin/base.html" %}
-{% block custom_header %}
-    <script src="https://cdn.tiny.cloud/1/n0ati5nj5n82d0xtpuzzbk3armgy8ldroeiqtxpvpjcsanfc"></script>
-{% endblock %}
+
 {% load static %}
 {% load crispy_forms_tags %}
 {% block content %}
@@ -9,155 +7,21 @@
 <section class="section">
     <div class="row">
         <div class="col-12">
+            <!-- Retour a la table des matieres -->
+            <a href="{% url 'sommaire_par_matiere' id_matiere %}">
+                <i class="ri-arrow-go-back-line"></i>
+            </a>
+            <div class="container mt-5">
+            <h1 class="text-uppercase mb-4">{{ cours.titre }}</h1>
 
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Enregistrement des Etudiants</h5>
-
-                    <!-- Accordion without outline borders -->
-                    <div class="accordion accordion-flush" id="accordionFlushExample">
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="flush-headingOne">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                        data-bs-target="#flush-collapseOne" aria-expanded="false"
-                                        aria-controls="flush-collapseOne">
-                                    Créer un nouveau Cours
-                                </button>
-                            </h2>
-                            <div id="flush-collapseOne" class="accordion-collapse collapse"
-                                 aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
-                                <div class="accordion-body">
-                                    <form method="POST" action="{% url 'cours' %}" id="form_cours" enctype="multipart/form-data">
-                                        {% csrf_token %}
-                                        <div class="row mb-3">
-                                            <label for="id_titre" class="col-sm-2 col-form-label">Titre</label>
-                                            <div class="col-sm-10">
-                                                {{ form.titre | as_crispy_field }}
-                                            </div>
-                                        </div>
-                                        <div class="row mb-3">
-                                            <label for="id_titre" class="col-sm-2 col-form-label">Sommaire</label>
-                                            <div class="col-sm-10">
-                                                {{ form.sommaire | as_crispy_field }}
-                                            </div>
-                                        </div>
-                                        <div class="row mb-3">
-                                            <div class="col-12">
-                                                {{ form.contenu | as_crispy_field }}
-                                            </div>
-                                        </div>
-
-                                        <div class="row mb-3">
-                                            <div class="col-sm-10">
-                                                <button type="submit" class="btn btn-primary">Enregistrer</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                {% autoescape off %}
+                    {{ cours.contenu }}
+                {% endautoescape %}
             </div>
         </div>
 
-        <!--Liste des Enseignants-->
-        <div class="col-12">
-
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Liste des Enseignants</h5>
-
-                    <!-- Table Enseignants -->
-                    <table class="table table-striped" id="tab_etudiants">
-                        <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Matricule</th>
-                            <th scope="col">Nom et Prénom</th>
-                            <th scope="col">Téléphone</th>
-                            <th scope="col">Genre</th>
-                            <th scope="col">Département</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>test</td>
-
-                            <td>
-                                {% for cours in  list_cours %}
-                                {{ cours.titre }}
-                                {% autoescape off %}
-                                {{ cours.contenu }}
-                                {% endautoescape %}
-                                {% endfor %}
-                            </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <!-- End Table with stripped rows -->
-
-                </div>
-            </div>
-
-        </div>
     </div>
 
 </section>
 
 {% endblock content %}
-
-{% block custom_js %}
-<script>
-    $(document).ready(function () {
-        <!-- Get liste Enseignants -->
-<!--        $.ajax({-->
-<!--            url: "/etudiant/liste/",-->
-<!--            dataType: "json",-->
-<!--            type: "GET",-->
-<!--            success: function (data) {-->
-
-<!--                var tab_etudiants = $("#tab_etudiants tbody");-->
-<!--                $.each(data.list_etudiants, function(index, item){-->
-<!--                    tab_etudiants.append(`-->
-<!--                    <tr>-->
-<!--                        <td scope="row">${index += 1}</td>-->
-<!--                        <td>${item.matricule}</td>-->
-<!--                        <td>${item.last_name} ${item.first_name}</td>-->
-<!--                        <td>${item.tel_etd}</td>-->
-<!--                        <td>${item.genre_etd}</td>-->
-<!--                        <td>${item.departement_etd}</td>-->
-<!--                    </tr>-->
-<!--                    `)-->
-<!--                })-->
-<!--            },-->
-<!--        });-->
-
-<!--        Soumission du formulaire d'enregistrement d'un nouveau Etudiant-->
-        $('#form_cou').submit(function (e) {
-            e.preventDefault();
-            return;
-            $.ajax({
-                url: $(this).attr('action'),
-                type: $(this).attr('method'),
-                data: $(this).serialize(),
-                success: function (data) {
-                    alert("Etudiant créé avec succès");
-                    $("#form_cours")[0].reset();
-                }
-            });
-        });
-    });
-</script>
-
-<!-- Initialisation de TinyMCE -->
-<script>
-  tinymce.init({
-    selector: 'textarea',
-    plugins: 'ai tinycomments mentions anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed permanentpen footnotes advtemplate advtable advcode editimage tableofcontents mergetags powerpaste tinymcespellchecker autocorrect a11ychecker typography inlinecss',
-    toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | align lineheight | tinycomments | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
-    tinycomments_mode: 'embedded',
-  });
-</script>
-
-{% endblock %}

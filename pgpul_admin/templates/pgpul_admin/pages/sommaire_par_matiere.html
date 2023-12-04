@@ -8,7 +8,10 @@
 <!--        <h4 class="mb-4">Département: <span class="fw-bold text-primary">{{ departement }}</span></h4>-->
 
         <div class="col-12">
-
+            <!-- Retour aux matieres -->
+            <a href="{% url 'liste_matieres' %}">
+                <i class="ri-arrow-go-back-line"></i>
+            </a>
           <div class="card">
             <div class="card-body">
               <h5 class="card-title">{{ matiere }}</h5>
@@ -26,7 +29,7 @@
                   <div id="collapseOne{{sommaire.sommaire}}" class="accordion-collapse collapse" aria-labelledby="{{sommaire.sommaire}}" data-bs-parent="#accordion{{sommaire.sommaire}}">
                     <div class="accordion-body">
                         {% for cours in sommaire.titre_cours %}
-                        <a href="#">
+                        <a href="{% url 'lire_cours' cours.id matiere.id %}">
                             {{ cours.titre }}
                         </a>
                         {% endfor %}
