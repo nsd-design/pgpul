@@ -84,7 +84,7 @@
               <form method="POST" action="{% url 'attribution' %}" id="form_attr_mat">
                 {% csrf_token %}
                 <div class="row mb-3">
-                  <label class="col-sm-2 col-form-label">Departements</label>
+                  <label class="col-sm-2 col-form-label">Départements</label>
                   <div class="col-sm-10">
                     <select class="form-select" name="departement" aria-label="Default select example" id="depart_select">
                       <option value="-1">Selectionnez un departement</option>
@@ -256,7 +256,7 @@
         var new_title_field = title_field.clone(true);
 
         <!-- Ajouter le champ dupliquer dans le DOM-->
-        $(".title_group:first").before(new_title_field);
+        $(".title_group:last").after(new_title_field);
 
         if($(".remove-title-field").prop("disabled", true)){
           $(".remove-title-field").prop("disabled", false);
@@ -273,12 +273,23 @@
         data: $(this).serialize(),
         success: function (data) {
           if (data.success) {
-            console.log("avant alert");
-            alert("Matiere créee avec succes");
+            Swal.fire({
+              position: "top-end",
+              icon: "success",
+              title: data.msg,
+              showConfirmButton: false,
+              timer: 2500
+            });
             $("#mat_form")[0].reset();
-            console.log("après alert et reset");
-          } else if (data.exists.length > 0) {
-            console.log(data.exists);
+          }
+          else if (data.exists.length > 0) {
+            Swal.fire({
+              position: "top-end",
+              icon: "warning",
+              title: data.exists,
+              showConfirmButton: false,
+              timer: 2500
+            });
           }
         },
       });

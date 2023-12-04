@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.core.serializers import serialize
 from django.db.models import Count
 from django.http import JsonResponse
@@ -41,7 +42,7 @@ def create_faculte(request):
     if request.method == "POST":
         fac_code = request.POST['code_fac']
 
-        print("formulaire de faculte", request.POST)
+        # print("formulaire de faculte", request.POST)
         if Faculte.objects.filter(code_fac=fac_code).exists():
             return JsonResponse({"exists": "Ce code existe déjà, veuillez entrer un nouveau code de Faculté."})
 
@@ -54,7 +55,7 @@ def create_faculte(request):
                 nom_fac=fac_name, code_fac=fac_code, created_by=user
             )
             new_fac.save()
-            return JsonResponse({"success": True})
+            return JsonResponse({"success": True, "msg": "Faculté créée avec succès !"})
         else:
             return JsonResponse({"errors": fac_form.errors})
     return redirect('departement')
@@ -77,7 +78,7 @@ def create_department(request):
                 nom_dept=nom_dept, code_dept=code_dept, dept_fac=dept_fac, created_by=user
             )
             new_dept.save()
-            return JsonResponse({"success": True})
+            return JsonResponse({"success": True, "msg": "Département créé avec succès !"})
         else:
             return JsonResponse({"errors": dept_form.errors})
 
@@ -100,7 +101,7 @@ def create_classe(request):
             new_class = Classe.objects.create(designation=designation, created_by=user)
             new_class.save()
 
-            return JsonResponse({"success": True})
+            return JsonResponse({"success": True, "msg": "Classe créée avec succès !"})
         else:
             return JsonResponse({"errors": class_form.errors})
 
@@ -145,7 +146,7 @@ def create_matiere(request):
             )
 
             new_matiere.save()
-            return JsonResponse({"success": True})
+            return JsonResponse({"success": True, "msg": "La matièere a été créée avec succès !"})
         else:
             return JsonResponse({"errors": form.errors})
     form_sommaire = SommaireForm()
@@ -192,6 +193,7 @@ def attribuer_matiere_a_pro(request):
                 matiere.enseigne_par.set(enseignant)
                 matiere.save()
                 print("attribution effectuéee")
+                messages.success(request, "Attribution effectué avec succès")
 
     return redirect("matiere")
 
@@ -226,7 +228,7 @@ def enseignant(request):
                 created_by=user
             )
             new_enseignant.save()
-            return JsonResponse({"success": True})
+            return JsonResponse({"success": True, "msg": "Enseignant enregistré avec succès !"})
         else:
             return JsonResponse({"errors": form.errors})
 
@@ -282,7 +284,7 @@ def create_etudiant(request):
             )
 
             new_etudiant.save()
-            return JsonResponse({'success': True})
+            return JsonResponse({'success': True, "msg": "Etudiant enregistré avec succès !"})
         else:
             return JsonResponse({'errors': form_etd.errors})
     context = {'form': form}
@@ -389,7 +391,7 @@ def liste_des_matieres(request):
         }
         list_matieres.append(current_matiere)
     context = {"list_matieres": list_matieres, "departement": departement.nom_dept}
-    return render(request, template_path+"liste_cours.html", context)
+    return render(request, template_path+"liste_des_matieres.html", context)
 
 
 def sommaire_par_matiere(request, id_matiere):
@@ -407,3 +409,11 @@ def sommaire_par_matiere(request, id_matiere):
         titres_cours.append(current_sommaire)
     context = {"sommaire_et_cours": titres_cours, "matiere": matiere}
     return render(request, template_path+"sommaire_par_matiere.html", context)
+
+
+def affiche_contenu_cours(request, id_cours, id_matiere):
+
+    cours = Cours.objects.get(id=id_cours)
+
+    context = {'cours': cours, 'id_matiere': id_matiere}
+    return render(request, template_path+"cours.html", context)
