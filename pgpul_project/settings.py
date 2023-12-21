@@ -203,3 +203,12 @@ TINYMCE_DEFAULT_CONFIG = {
 
 # Augmenter la taille de fichiers a uploader
 DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10 Mo
+
+# Configuration du serveur smtp
+# EMAIL_BACKEND = 'django_smtp_ssl.SSLEmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_SSL = True
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'ibayo427@gmail.com'
+EMAIL_HOST_PASSWORD = 'ynzhcgfyysmneqke'

@@ -1,11 +1,16 @@
 from django.contrib import messages
+from django.core.mail import EmailMessage, send_mail
 from django.core.serializers import serialize
 from django.db.models import Count
 from django.http import JsonResponse
-from django.shortcuts import render, redirect, get_list_or_404
+from django.shortcuts import render, redirect, get_list_or_404, get_object_or_404
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 from pgpul_admin.forms import *
 from pgpul_admin.models import *
+from pgpul_project.settings import EMAIL_HOST_USER
+# from pgpul_project.settings import EMAIL_HOST_USER
 
 from utilisateur.models import Utilisateur
 
@@ -270,25 +275,83 @@ def create_etudiant(request):
             genre_etd = form_etd.cleaned_data['genre_etd']
             tel_etd = form_etd.cleaned_data['tel_etd']
             departement_etd = form_etd.cleaned_data['departement_etd']
+            email_etd = form_etd.cleaned_data['email']
 
             user = request.user
-            new_etudiant = Etudiant.objects.create(
-                first_name=first_name,
-                last_name=last_name,
-                username=username,
-                matricule=matricule,
-                genre_etd=genre_etd,
-                tel_etd=tel_etd,
-                departement_etd=departement_etd,
-                created_by=user
-            )
+            try:
+                new_etudiant = Etudiant.objects.create(
+                    first_name=first_name,
+                    last_name=last_name,
+                    email=email_etd,
+                    username=username,
+                    matricule=matricule,
+                    genre_etd=genre_etd,
+                    tel_etd=tel_etd,
+                    departement_etd=departement_etd,
+                    created_by=user
+                )
+                message = "Ce mail a ete envoye pour tester la creation d'etudiant"
+                recipients = ["ibayotech@gmail.com"]
+                # send_mail = EmailMessage(
+                #     subject="Test envoie mail etudiant",
+                #     body=message,
+                #     from_email=EMAIL_HOST_USER,
+                #     to=recipients,
+                # )
+                # send_mail.send(fail_silently=False)
+                new_etudiant.save()
+                link = "confirmation_link_etudiant"
+                print("debut envoie mail")
+                send_confirmation_email(new_etudiant, confirmation_link=link)
+                print("apres envoie mail")
 
-            new_etudiant.save()
-            return JsonResponse({'success': True, "msg": "Etudiant enregistré avec succès !"})
+            except Exception as e:
+                print("Failed to send", e)
+                JsonResponse({'errors': f"Erreur lors de la creation de l'etudiant: {str(e)}"})
+            else:
+                # new_etudiant.save()
+                #  app password: xnunfvgdywbexpfn
+                message = "Ce mail a ete envoye pour tester la creation d'etudiant"
+                recipients = ["ibayotech@gmail.com"]
+                try:
+                    # send_mail(
+                    #     subject="Test envoie mail etudiant",
+                    #     message=message,
+                    #     from_email="",
+                    #     recipient_list=recipients,
+                    # )
+                    pass
+                except Exception as e:
+                    print("Error envoie mail", e)
+                return JsonResponse({'success': True, "msg": "Etudiant enregistré avec succès !"})
         else:
             return JsonResponse({'errors': form_etd.errors})
     context = {'form': form}
     return render(request, template_path+"etudiant.html", context=context)
+
+
+def send_confirmation_email(utilisateur, confirmation_link):
+    subject = "Confirmation de compte"
+    html_message = render_to_string(template_path + "confirmation_email_template.html",
+                                    {"etudiant": utilisateur, "confirmation_link": confirmation_link})
+    plain_message = strip_tags(html_message)
+    print("utilisateur/destinateur", utilisateur)
+    mail_sent = send_mail(
+        subject=subject, message=plain_message,
+        from_email=EMAIL_HOST_USER, recipient_list=[utilisateur.email],
+        fail_silently=False, html_message=html_message
+    )
+
+    print("Mail envoyé", mail_sent)
+
+
+def confirmation_compte_etudiant(request, id_utilisateur):
+    if request.method == 'GET':
+        utilisateur = get_object_or_404(Utilisateur, id=id_utilisateur)
+
+        context = {"id": id_utilisateur, "username": utilisateur.username, "pwd": utilisateur.password}
+
+        return render(request, template_path+"confirmation_compte.html", context=context)
 
 
 def liste_etudiants(request):
