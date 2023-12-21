@@ -65,3 +65,30 @@ def inscription(request):
     # else:
     #     form = InscriptionForm()
     #     return render(request, temp+"inscription.html", context={'form': form})
+
+
+def confirmation_compte(request):
+    if request.method == 'POST':
+        id_user = request.POST.get('id_user')
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        confirm_password = request.POST.get('confirm_password')
+
+        if not password or not confirm_password:
+            return JsonResponse({"errors": True, "msg": "Veillez saisire un mot de passe"})
+
+        if password == confirm_password:
+
+            utilisateur = Utilisateur.objects.get(id=id_user)
+
+            try:
+                utilisateur.username = username
+                utilisateur.set_password(password)
+                utilisateur.is_active = True
+                utilisateur.save()
+            except Exception as e:
+                return JsonResponse({"errors": True, "msg": "Impossible de confirmer votre compte"})
+            else:
+                return JsonResponse({"success": True, "msg": "Votre compte a été confirmé avec succès"})
+        else:
+            return JsonResponse({"errors": True, "msg": "Les deux mots de passe doivent être identiques"})

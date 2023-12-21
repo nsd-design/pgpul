@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Confirmation de compte</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f8f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+        }
+
+        .header {
+            background-color: #3498db;
+            color: #ffffff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .content {
+            padding: 20px;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .footer {
+            padding: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Bienvenue {{ etudiant.first_name }} {{ etudiant.last_name }} !</h1>
+        </div>
+
+        <div class="content">
+            <p>Cliquez sur le lien ci-dessous pour confirmer votre compte :</p>
+            <a href="{% url 'confirmation_link_etudiant' etudiant.id %}" target="_blank">Confirmer</a>
+
+            <p>Merci de nous rejoindre.</p>
+        </div>
+
+        <div class="footer">
+            <p>© Université de Labé</p>
+        </div>
+    </div>
+</body>
+</html>
