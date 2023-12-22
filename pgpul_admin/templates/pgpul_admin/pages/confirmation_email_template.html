@@ -46,7 +46,8 @@
 
         <div class="content">
             <p>Cliquez sur le lien ci-dessous pour confirmer votre compte :</p>
-            <a href="{% url 'confirmation_link_etudiant' etudiant.id %}" target="_blank">Confirmer</a>
+            <a href="{% url 'get_user_infos' etudiant.id %}" target="_blank">Confirmer</a>
+            <a href="{{ confirmation_link }}" target="_blank">Confirmer</a>
 
             <p>Merci de nous rejoindre.</p>
         </div>
