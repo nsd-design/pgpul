@@ -2,9 +2,10 @@ from django.contrib import messages
 from django.core.mail import EmailMessage, send_mail
 from django.core.serializers import serialize
 from django.db.models import Count
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpRequest
 from django.shortcuts import render, redirect, get_list_or_404, get_object_or_404
 from django.template.loader import render_to_string
+from django.urls import reverse
 from django.utils.html import strip_tags
 
 from pgpul_admin.forms import *
@@ -233,6 +234,7 @@ def enseignant(request):
                 created_by=user
             )
             new_enseignant.save()
+
             return JsonResponse({"success": True, "msg": "Enseignant enregistré avec succès !"})
         else:
             return JsonResponse({"errors": form.errors})
@@ -300,10 +302,8 @@ def create_etudiant(request):
                 # )
                 # send_mail.send(fail_silently=False)
                 new_etudiant.save()
-                link = "confirmation_link_etudiant"
-                print("debut envoie mail")
-                send_confirmation_email(new_etudiant, confirmation_link=link)
-                print("apres envoie mail")
+
+                send_confirmation_email(request, new_etudiant)
 
             except Exception as e:
                 print("Failed to send", e)
@@ -330,10 +330,15 @@ def create_etudiant(request):
     return render(request, template_path+"etudiant.html", context=context)
 
 
-def send_confirmation_email(utilisateur, confirmation_link):
+def send_confirmation_email(request: HttpRequest, utilisateur):
+    user_info_link = "/compte/confirmation/" + str(utilisateur.id) + "/"
+
+    #  Creer le lien absolue du template devant etre afficher pour la confirmation du compte
+    absolut_confirmation_link = request.build_absolute_uri(user_info_link)
+
     subject = "Confirmation de compte"
     html_message = render_to_string(template_path + "confirmation_email_template.html",
-                                    {"etudiant": utilisateur, "confirmation_link": confirmation_link})
+                                    {"etudiant": utilisateur, "confirmation_link": absolut_confirmation_link})
     plain_message = strip_tags(html_message)
     print("utilisateur/destinateur", utilisateur)
     mail_sent = send_mail(
@@ -342,10 +347,8 @@ def send_confirmation_email(utilisateur, confirmation_link):
         fail_silently=False, html_message=html_message
     )
 
-    print("Mail envoyé", mail_sent)
 
-
-def confirmation_compte_etudiant(request, id_utilisateur):
+def get_user_infos(request, id_utilisateur):
     if request.method == 'GET':
         utilisateur = get_object_or_404(Utilisateur, id=id_utilisateur)
 
