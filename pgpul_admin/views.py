@@ -235,6 +235,8 @@ def enseignant(request):
             )
             new_enseignant.save()
 
+            send_confirmation_email(request, new_enseignant)
+
             return JsonResponse({"success": True, "msg": "Enseignant enregistré avec succès !"})
         else:
             return JsonResponse({"errors": form.errors})
