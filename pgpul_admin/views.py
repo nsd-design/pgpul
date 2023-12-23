@@ -485,3 +485,24 @@ def affiche_contenu_cours(request, id_cours, id_matiere):
 
     context = {'cours': cours, 'id_matiere': id_matiere}
     return render(request, template_path+"cours.html", context)
+
+
+def create_support_cours(request):
+    form = SupportCoursForm()
+
+    if request.method == "POST":
+        support_form = SupportCoursForm(request.POST, request.FILES)
+
+        if support_form.is_valid():
+            document = support_form.cleaned_data['designation_support']
+            matiere = support_form.cleaned_data['matiere_support']
+
+            new_support = supportCours.objects.create(
+                designation_support=document, matiere_support=matiere, created_by=request.user
+            )
+
+            new_support.save()
+            messages.success(request, "Support de cours enregistré avec succès !")
+        return redirect("support_cours")
+    context = {'form': form}
+    return render(request, template_path + "support_cours.html", context)

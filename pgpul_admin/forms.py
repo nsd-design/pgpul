@@ -170,3 +170,16 @@ class CoursForm(forms.ModelForm):
     class Meta:
         model = Cours
         fields = ['titre', 'contenu', 'sommaire']
+
+
+class SupportCoursForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(SupportCoursForm, self).__init__(*args, **kwargs)
+
+        # Supprimer les labels
+        for field_name, field in self.fields.items():
+            field.label = ''
+
+    class Meta:
+        model = supportCours
+        fields = ['designation_support', 'matiere_support']
