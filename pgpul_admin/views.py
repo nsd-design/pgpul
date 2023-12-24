@@ -490,6 +490,9 @@ def affiche_contenu_cours(request, id_cours, id_matiere):
 
 
 def create_support_cours(request):
+    supports_cours = None
+    if request.method == "GET":
+        supports_cours = get_supports_de_cours(request)
 
     if request.method == "POST":
         extension_authorized = ['.pdf']
@@ -514,4 +517,24 @@ def create_support_cours(request):
                 messages.error(request, "Le fichier doit être au format PDF")
 
     form = SupportCoursForm()
-    return render(request, template_path + "support_cours.html", context={'form': form})
+    context = {'form': form, "supports": supports_cours}
+    return render(request, template_path + "support_cours.html", context=context)
+
+
+def get_supports_de_cours(request):
+    usr = request.user
+    try:
+        etudiant = Etudiant.objects.get(id=usr.id)
+        matieres_by_departement = Matiere.objects.filter(dept_mat=etudiant.departement_etd)
+        support_by_matiere = supportCours.objects.filter(matiere_support__in=matieres_by_departement)
+        return support_by_matiere
+    except Etudiant.DoesNotExist:
+        pass
+    try:
+        enseignant = Enseignant.objects.get(id=usr.id)
+        matieres_by_departement = Matiere.objects.filter(dept_mat=enseignant.departement_principal)
+        support_by_matiere = supportCours.objects.filter(matiere_support__in=matieres_by_departement)
+        return support_by_matiere
+
+    except Enseignant.DoesNotExist:
+        pass
