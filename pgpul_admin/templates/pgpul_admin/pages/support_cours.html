@@ -32,14 +32,24 @@
                         <form method="POST" action="{{ support_cours }}" class="row g-3" enctype="multipart/form-data" id="support_cours_form">
                             {% csrf_token %}
 
-                            <div class="col-md-3">
-                                <label for="id_matiere_support" class="form-label">Choisissez la matière</label>
-                                {{ form.matiere_support | as_crispy_field}}
+                            <div class="col-md-4">
+                                <label for="matiere_support" class="form-label">Choisissez la matière</label>
+                                <div class="col-sm-12">
+
+                                <select class="form-select" name="matiere_support" aria-label="Default select example" id="matiere_support">
+                                  <option>Selectionnez une matière</option>
+                                    {% for matiere in matieres %}
+                                  <option value="{{ matiere.id }}">{{ matiere.nom_mat }}</option>
+                                  {% endfor %}
+                                </select>
+                                </div>
                             </div>
 
-                            <div class="col-md-3">
-                                <label for="id_designation_support" class="form-label">Nom du Département</label>
-                                {{ form.designation_support | as_crispy_field}}
+                            <div class="col-md-4">
+                                <label for="id_designation_support" class="form-label">Selectionnez un fichier pdf</label>
+                                <div class="col-sm-12">
+                                    <input type="file" class="form-control" name="designation_support" class="form-control" id="id_designation_support" required="">
+                                </div>
                             </div>
                             <div class="col-12 col-md-3 position-md-absolute top-md-0 mt-md-5 mb-3 end-md-0 translate-md-middle-y">
                                 <button class="btn btn-primary" type="submit">Ajouter</button>
