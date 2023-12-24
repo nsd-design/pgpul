@@ -1,3 +1,5 @@
+import os.path
+
 from django.db import models
 from tinymce.models import HTMLField
 
@@ -177,3 +179,6 @@ class supportCours(models.Model):
 
     def __str__(self):
         return f"{self.matiere_support} - {self.designation_support}"
+
+    def filename(self):
+        return os.path.basename(self.designation_support.name)
