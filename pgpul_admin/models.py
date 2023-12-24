@@ -174,3 +174,6 @@ class supportCours(models.Model):
     updated_by = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True,
                                    related_name="support_cours_updated_by")
     updated_at = models.DateTimeField(blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.matiere_support} - {self.designation_support}"
