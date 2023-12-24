@@ -544,14 +544,16 @@ def get_supports_de_cours(request):
     try:
         etudiant = Etudiant.objects.get(id=usr.id)
         matieres_by_departement = Matiere.objects.filter(dept_mat=etudiant.departement_etd)
-        support_by_matiere = supportCours.objects.filter(matiere_support__in=matieres_by_departement)
+        support_by_matiere = supportCours.objects.filter(matiere_support__in=matieres_by_departement,
+                                                         statut=1).order_by('matiere_support')
         return support_by_matiere, 'etd', etudiant
     except Etudiant.DoesNotExist:
         pass
     try:
         enseignant = Enseignant.objects.get(id=usr.id)
         matieres_by_departement = Matiere.objects.filter(dept_mat=enseignant.departement_principal)
-        support_by_matiere = supportCours.objects.filter(matiere_support__in=matieres_by_departement)
+        support_by_matiere = supportCours.objects.filter(matiere_support__in=matieres_by_departement,
+                                                         statut=1).order_by('matiere_support')
         return support_by_matiere, 'ens', enseignant
 
     except Enseignant.DoesNotExist:
