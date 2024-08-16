@@ -17,11 +17,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from landing_page.views import home
 from pgpul_admin.views import dashboard
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', dashboard, name='dashmin'),
+    path('', home, name='home'),
+    path('/dashmin', dashboard, name='dashmin'),
     path('user/', include('utilisateur.urls')),
     path('', include('pgpul_admin.urls'))
 ]

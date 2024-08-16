@@ -1,0 +1,73 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+    background-color: #f7f7f7;
+    /* width: 100vw; */
+}
+.header{
+    background-color: #426976;
+}
+
+.btn-inscription{
+    background-color: #074E5E;
+    color: #f7f7f7;
+    font-weight: 700;
+}
+
+/* .video-presentation{
+    height: calc(100vh - 185px) !important;
+} */
+
+.video-box{
+    width: inherit;
+    height: 100%;
+    background-color: rgb(0, 0, 0);
+}
+
+.video-transparente {
+    opacity: .3;
+}
+
+
+/* Temoignages etudiants */
+.temoignage{
+    background-color: #074E5E;
+    color: #fff;
+}
+.avatar{
+    width: 68px;
+    height: 68px;
+}
+
+/* Section de Connexion */
+.connexion-sect{
+    background-color: #FFE6DE;
+}
+.con-input:focus,
+.con-input{
+    background-color: #426976; 
+    color: white;
+    height: 3.5rem;
+}
+.con-input::placeholder{
+    color: white;
+}
+
+
+/* Footer */
+footer{
+    background-color: #426976;
+}
+
+/* Bouton sur la card des departements  */
+.btn-departement{
+    background-color: #426976;
+    color: #f7f7f7
+}
+.btn-departement:active,
+.btn-departement:hover{
+    background-color: #074E5E;
+}
