@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'pgpul_admin',
     'utilisateur',
+    'landing_page',
     'crispy_forms',
     'crispy_bootstrap5',
     'tinymce',
