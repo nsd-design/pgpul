@@ -5,6 +5,11 @@
     <div class="d-flex align-items-center justify-content-between">
       <a href="index.html" class="logo d-flex align-items-center">
         <img src="{% static 'assets/img/logo.png' %}" alt="">
+        <div class="col-4 my-3" id="logo">
+                <a class="navbar-brand" href="{% url 'home' %}">
+                    <img src="{% static 'landing_page/images/logo Pgpul.png' %}" style="width: 25%" alt="logo pgpul">
+                </a>
+            </div>
         <span class="d-none d-lg-block">NiceAdmin</span>
       </a>
       <i class="bi bi-list toggle-sidebar-btn"></i>

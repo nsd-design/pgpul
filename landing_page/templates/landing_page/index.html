@@ -1,62 +1,6 @@
-<!DOCTYPE html>
 {% load static %}
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PGPUL</title>
-    <!-- Vendor CSS Files -->
-    <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'landing_page/style.css' %}">
-</head>
-<body>
-    <!-- Header -->
-    <header class="text-white header">
-        <!-- <div class="row"> -->
-            <nav class="navbar navbar-expand-lg">
-                <div class="container-fluid align-items-center">
-                    <div class="col-4 my-3" id="logo">
-                        <a class="navbar-brand" href="#">
-                            <img src="{% static 'landing_page/images/logo Pgpul.png' %}" style="width: 25%" alt="logo pgpul">
-                        </a>
-                    </div>
-                    <!-- <div class="row"> -->
-
-                        <div class="col-3 collapse navbar-collapse" id="navbarSupportedContent">
-                            <ul class="navbar-nav me-auto mb-2 mb-lg-0 fs-4">
-                                <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="#">Accueil</a>
-                                </li>
-                                <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Facultés
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="#">FST</a></li>
-                                    <li><a class="dropdown-item" href="#">FSAGE</a></li>
-                                    <!-- <li><hr class="dropdown-divider"></li> -->
-                                    <li><a class="dropdown-item" href="#">FLSH</a></li>
-                                </ul>
-                                </li>
-                                <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="#">Contact</a>
-                                </li>
-                            </ul>
-
-                        </div>
-                        <div class="col button-sign-up-sign-in">
-                            <a class="btn fs-6 fw-bolder">Connexion</a>
-                            <a class="btn fs-6 btn-inscription">Inscription</a>
-                        </div>
-                    <!-- </div> -->
-
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                </div>
-            </nav>
-        <!-- </div> -->
-    </header>
+    <!-- Header | Menu de navigation -->
+    {% include 'landing_page/nav_menu.html' %}
 
     <!-- Video de presentation de la plateforme -->
     <div class="video-box">
@@ -230,16 +174,17 @@
                     <img src="{% static 'landing_page/images/login.jpg' %}" class="mw-50 col-12 col-md-4 mb-4 rounded shadow-lg" alt="illustration de connexion" >
                 <!-- </div> -->
                 <div class="formulaire-connexion ms-5 col-12 col-md-6">
-                    <form action="" class="w-75">
+                    <form method="POST" action="{% url 'home' %}" class="w-75" id="connexion">
+                        {% csrf_token %}
                         <div class="mb-3">
-                            <label for="email" class="form-label fs-4 fw-bold">E-mail</label>
-                            <input type="email" class="form-control w-100 con-input shadow rounded" id="email" placeholder="xyz@example.com">
+                            <label for="username" class="form-label fs-4 fw-bold">Nom d'utilisateur</label>
+                            <input type="text" name="username" class="form-control w-100 con-input shadow rounded" id="username" placeholder="jean">
                         </div>
                         <div class="mb-3">
                             <label for="password" class="form-label fs-4 fw-bold">Mot de passe</label>
-                            <input type="password" class="form-control p-2 con-input shadow rounded" id="password" placeholder="mot de passe">
+                            <input type="password" name="password" class="form-control p-2 con-input shadow rounded" id="password" placeholder="mot de passe">
                         </div>
-                        <input type="submit" value="Connexion" class="w-100 btn p-2 fs-4 focus-ring" style="background-color: #074E5E; color: white;">
+                        <input type="submit" value="Se connecter" class="w-100 btn p-2 fs-4 focus-ring" style="background-color: #074E5E; color: white;">
                     </form>
                 </div>
             </div>
