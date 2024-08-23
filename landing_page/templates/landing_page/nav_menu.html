@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PGPUL</title>
+    <!-- Vendor CSS Files -->
+    <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'landing_page/style.css' %}">
+</head>
+<body>
+<header class="text-white header">
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid align-items-center">
+            <div class="col-4 my-3" id="logo">
+                <a class="navbar-brand" href="{% url 'home' %}">
+                    <img src="{% static 'landing_page/images/logo Pgpul.png' %}" style="width: 25%" alt="logo pgpul">
+                </a>
+            </div>
+            <!-- <div class="row"> -->
+
+                <div class="col-3 collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 fs-4">
+                        <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Accueil</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-black" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Facultés
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">FST</a></li>
+                            <li><a class="dropdown-item" href="#">FSAGE</a></li>
+                            <!-- <li><hr class="dropdown-divider"></li> -->
+                            <li><a class="dropdown-item" href="#">FLSH</a></li>
+                        </ul>
+                        </li>
+                        <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Contact</a>
+                        </li>
+                    </ul>
+
+                </div>
+                <div class="col button-sign-up-sign-in">
+                    <a class="btn fs-6 fw-bolder" href="#connexion" title="acceder au formulaire de connexion">Connexion</a>
+                    <a class="btn fs-6 btn-inscription">Inscription</a>
+                </div>
+            <!-- </div> -->
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+    </nav>
+</header>
