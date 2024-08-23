@@ -30,7 +30,19 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+allowed_hosts = os.getenv("ALLOWED_HOSTS")
+
+if allowed_hosts:
+    ALLOWED_HOSTS = allowed_hosts.split(",")
+else:
+    ALLOWED_HOSTS = []
+
+csrf_trusted_origins = os.getenv("CSRF_TRUSTED_ORIGINS")
+
+if csrf_trusted_origins:
+    CSRF_TRUSTED_ORIGINS = csrf_trusted_origins.split(",")
+else:
+    CSRF_TRUSTED_ORIGINS = []
 
 
 # Application definition
@@ -100,7 +112,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',  # Utilisation du moteur PostgreSQL
         'NAME': 'pgpul_db',  # Nom de votre base de données
         'USER': 'postgres',  # Nom d'utilisateur PostgreSQL
-        'PASSWORD': 'N$2_1b@t@ble',  # Mot de passe PostgreSQL
+        'PASSWORD': os.getenv("DB_PASSWORD"),  # Mot de passe PostgreSQL
         'HOST': '127.0.0.1',  # L'emplacement de votre base de données (localhost par défaut)
         'PORT': '5432',  # Port de la base de données (par défaut est généralement 5432)
     }
