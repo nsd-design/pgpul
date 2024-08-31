@@ -24,6 +24,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home, name='home'),
     path('dashmin/', dashboard, name='dashmin'),
+    path('dashmin/', include('landing_page.urls')),
     path('user/', include('utilisateur.urls')),
     path('', include('pgpul_admin.urls'))
 ]

@@ -1,7 +1,7 @@
 from django.urls import path
 
-from pgpul_admin.views import *
+from landing_page.views import *
 
 urlpatterns = [
-
+    path('blog/', blog, name='blog')
 ]

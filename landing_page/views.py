@@ -1,6 +1,11 @@
+import pathlib
+
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
+
+from landing_page.forms import PostForm
 
 
 def home(request):
@@ -16,3 +21,27 @@ def home(request):
             messages.error(request, "Identifiants incorrects. Veuillez réessayer.")
 
     return render(request, template_name="landing_page/index.html")
+
+
+def blog(request):
+    post_form = PostForm()
+    context = {"form": post_form}
+    if request.method == "POST":
+        extensions = ['.jpg', '.jpeg', '.png']
+        form = PostForm(request.POST, request.FILES)
+        file = request.FILES.get('cover', None)
+        # Verifier si le cover a ete soumis
+        print("\n\nFile", file)
+        if file:
+            print("\n\nfichier uploaded...")
+            ext = pathlib.Path(str(file)).suffix  # get file extension
+            # Verifier si le type de fichier est autorisé
+            if ext not in extensions:
+                return JsonResponse({"error": "Type de fichier non autorisé"})
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.created_by = request.user
+            post.save()
+            print("Post saved")
+
+    return render(request, "landing_page/blog.html", context)
