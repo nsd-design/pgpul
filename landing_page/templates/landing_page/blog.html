@@ -1,0 +1,94 @@
+{% extends "pgpul_admin/base.html" %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <h1>Hello from Blog</h1>
+<!-- Lancer le Modal ajout Cours-->
+    <button type="button" data-bs-toggle="modal" data-bs-target="#create-blog" data-sommaire-id="" data-sommaire-titre="" data-matiere=""
+      class="btn btn-primary" title=""
+      >
+        Nouveau post
+        <i class="ri-add-circle-line"></i>
+    </button>
+
+    <div class="modal fade" id="create-blog" tabindex="-1" data-bs-backdrop="false">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="matiere">Création d'un Post</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+<!--                    <h5 class="text-center fw-bold " id="titre-sommaire">chapitre</h5>-->
+
+                    <form method="POST" action="{% url 'blog' %}" id="form_post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row mb-3">
+                            <label for="id_titre" class="col-sm-2 col-form-label">Titre <span>*</span></label>
+                            <div class="col-sm-10">
+                                {{ form.title | as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="id_cover" class="col-sm-2 col-form-label">Image de couverture</label>
+                            <div class="col-sm-10">
+                                {{ form.cover | as_crispy_field }}
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                {{ form.content | as_crispy_field }}
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-sm-10">
+                                <button type="submit" class="btn btn-primary">Enregistrer</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div><!-- End Disabled Backdrop Modal-->
+{% endblock %}
+
+{% block custom_js %}
+<!-- Initialisation de TinyMCE -->
+<script>
+  tinymce.init({
+    selector: 'textarea',
+    plugins: 'ai tinycomments mentions anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed permanentpen footnotes advtemplate advtable advcode editimage tableofcontents mergetags powerpaste tinymcespellchecker autocorrect a11ychecker typography inlinecss',
+    toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | align lineheight | tinycomments | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+    tinycomments_mode: 'embedded',
+  });
+</script>
+
+<script>
+    $("#form_post").on('submit', function (e){
+        e.preventDefault();
+
+        var form = $("#form_post")[0]
+        var formData = new FormData(form)
+
+
+        $.ajax({
+            url: $(this).attr('action'),
+            type: $(this).attr('method'),
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(data){
+
+            }
+        })
+    })
+</script>
+
+{% endblock %}

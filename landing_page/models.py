@@ -7,6 +7,8 @@ from utilisateur.models import Utilisateur
 class Post(models.Model):
     title = models.CharField(max_length=255)
     content = HTMLField()
+    cover = models.ImageField(upload_to="images/post-covers", blank=True, null=True)
+    posted = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True)
 
