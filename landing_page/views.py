@@ -31,17 +31,22 @@ def blog(request):
         form = PostForm(request.POST, request.FILES)
         file = request.FILES.get('cover', None)
         # Verifier si le cover a ete soumis
-        print("\n\nFile", file)
+        # print("\n\nFile", file)
         if file:
-            print("\n\nfichier uploaded...")
+            # print("\n\nfichier uploaded...")
             ext = pathlib.Path(str(file)).suffix  # get file extension
             # Verifier si le type de fichier est autorisé
             if ext not in extensions:
                 return JsonResponse({"error": "Type de fichier non autorisé"})
         if form.is_valid():
-            post = form.save(commit=False)
-            post.created_by = request.user
-            post.save()
-            print("Post saved")
+            try:
+                post = form.save(commit=False)
+                post.created_by = request.user
+                post.save()
+            except Exception as e:
+                return JsonResponse({"error": True, "msg": e})
+            else:
+                print("Post saved")
+                return JsonResponse({"success": True, "msg": "Article créé avec succès"})
 
     return render(request, "landing_page/blog.html", context)
