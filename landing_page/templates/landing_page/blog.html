@@ -3,14 +3,17 @@
 {% load static %}
 {% load crispy_forms_tags %}
 {% block content %}
-    <h1>Hello from Blog</h1>
-<!-- Lancer le Modal ajout Cours-->
+<!-- Lancer le Modal ajout Post-->
     <button type="button" data-bs-toggle="modal" data-bs-target="#create-blog" data-sommaire-id="" data-sommaire-titre="" data-matiere=""
       class="btn btn-primary" title=""
-      >
+    >
         Nouveau post
         <i class="ri-add-circle-line"></i>
     </button>
+
+    <h1 class="mt-2">Articles & Communiqués</h1>
+
+    {% include "landing_page/articles.html" %}
 
     <div class="modal fade" id="create-blog" tabindex="-1" data-bs-backdrop="false">
         <div class="modal-dialog modal-fullscreen">
