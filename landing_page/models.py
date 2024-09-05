@@ -59,6 +59,9 @@ class Temoignage(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True)
 
+    def __str__(self):
+        return f"{self.pk} - {self.nom}"
+
 
 class ContactUs(models.Model):
     email = models.CharField(max_length=200)
