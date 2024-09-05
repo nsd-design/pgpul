@@ -1,0 +1,39 @@
+{% load static %}
+{% load crispy_forms_tags %}
+
+<section class="section">
+    <div class="row align-items-top d-flex justify-content-start">
+        <!-- Card with an image on top -->
+        {% for article in articles %}
+        <div class="col-lg-4">
+            <a href="{% url 'read-article' article.id %}">
+                <div class="card">
+                    <div class="top-card" style="height: 200px;">
+                        {% if article.cover %}
+                        <img src="{{ article.cover.url }}" class="card-img-top img-responsive" alt=""
+                             style="height: 100%; width: 100%; object-fit: cover;"
+                        >
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <h6 class="mt-2 p-2">{{ article.title}}</h6>
+                        <p class="fw-semibold"><span class="bi bi-clock m-2"></span> {{ article.age }}</p>
+                    </div>
+<!--                    {% if matiere.enseigne_par %}-->
+                    <div class="card-footer">
+                        <p>
+                            <i class="ri-user-3-line"></i>
+<!--                            {% if matiere.enseigne_par.all|length >= 0 %}-->
+<!--                            {% for enseignant in matiere.enseigne_par %}-->
+                            <span></span> |
+<!--                            {% endfor %}-->
+<!--                            {% endif %}-->
+                        </p>
+                    </div>
+<!--                    {% endif %}-->
+                </div><!-- End Card with an image on top -->
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</section>

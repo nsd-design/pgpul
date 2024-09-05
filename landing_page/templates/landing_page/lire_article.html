@@ -1,0 +1,20 @@
+{% extends "pgpul_admin/base.html" %}
+{% load tz %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="container">
+    <p>Age : {{ article.age }}</p>
+    <p>Publié: {{article.created_at|timesince}}</p>
+    <h3 class="fs-3 mt-2 fw-semibold">{{ article.title}}</h3>
+    {% autoescape off %}
+    {{ article.content }}
+    {% endautoescape %}
+
+
+</div>
+
+
+
+{% endblock %}
