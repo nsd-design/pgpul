@@ -2,11 +2,12 @@ import pathlib
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
+from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 
-from landing_page.forms import PostForm, TemoignageForm
-from landing_page.models import Post, Temoignage
+from landing_page.forms import PostForm, TemoignageForm, PartenaireForm
+from landing_page.models import Post, Temoignage, Partenaire
 
 
 def home(request):
@@ -25,11 +26,6 @@ def home(request):
 
 
 def blog(request):
-    post_form = PostForm()
-    # Recuperatons des articles
-    articles = Post.objects.all()
-    context = {"form": post_form, "articles": articles}
-
     # Creation d'un article
     if request.method == "POST":
         extensions = ['.jpg', '.jpeg', '.png']
@@ -54,6 +50,14 @@ def blog(request):
                 # print("Post saved")
                 return JsonResponse({"success": True, "msg": "Article créé avec succès"})
 
+    post_form = PostForm()
+    # Recuperatons des articles
+    articles = Post.objects.all().order_by("-created_at")
+    paginator = Paginator(articles, 6)
+    page_number = request.GET.get("page")
+    page_object = paginator.get_page(page_number)
+    context = {"form": post_form, "articles": page_object}
+
     return render(request, "landing_page/blog.html", context)
 
 
@@ -67,9 +71,7 @@ def lire_article(request, id_article):
 
 def temoignage(request):
     temoignage_form = TemoignageForm()
-    temoignages = get_list_or_404(Temoignage)
-    context = {"form": temoignage_form,
-               "temoignages": temoignages}
+    # temoignages = get_list_or_404(Temoignage)
 
     if request.method == "POST":
         temoignage_form = TemoignageForm(request.POST)
@@ -86,4 +88,54 @@ def temoignage(request):
                 temoignage_et.save()
                 return JsonResponse({"success": True, "msg": "Merci pour votre temoignage"})
 
+    temoignages_list = Temoignage.objects.all().order_by('-id')
+    paginator = Paginator(temoignages_list, 3)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {"form": temoignage_form,
+               "page_obj": page_obj}
     return render(request, "landing_page/temoignage.html", context)
+
+
+def check_file_type(file):
+    extensions = ['.jpg', '.jpeg', '.png']
+    # Verifier si le cover a ete soumis
+    # print("\n\nFile", file)
+    if file:
+        # print("\n\nfichier uploaded...")
+        ext = pathlib.Path(str(file)).suffix  # get file extension
+        # Verifier si le type de fichier est autorisé
+        if ext in extensions:
+            return True
+        else:
+            return False
+
+
+def partenaire(request):
+    print("post partenaire...")
+    if request.method == "POST":
+        form = PartenaireForm(request.POST, request.FILES)
+        file = request.FILES.get('logo', None)
+        # Verifier si le cover a ete soumis
+        # print("\n\nFile", file)
+        if not check_file_type(file):
+            return JsonResponse({"error": "Type de fichier non autorisé"})
+        if form.is_valid():
+            try:
+                post = form.save(commit=False)
+                post.created_by = request.user
+                post.save()
+            except Exception as e:
+                return JsonResponse({"error": True, "msg": e})
+            else:
+                return JsonResponse({"success": True, "msg": "Partenaire créé avec succès"})
+
+    form = PartenaireForm()
+    partenaires = Partenaire.objects.all().order_by('-created_at')
+    paginator = Paginator(partenaires, 3)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = {'form': form, 'partenaires': page_obj}
+
+    return render(request, "landing_page/parteniare.html", context)
