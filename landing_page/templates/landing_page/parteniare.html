@@ -1,0 +1,195 @@
+{% extends "pgpul_admin/base.html" %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="container p-5">
+    <div class="card">
+        <!-- Alert -->
+        <div class="alert alert-info alert-dismissible fade d-none" id="alert" role="alert">
+
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div class="alert alert-danger alert-dismissible fade d-none" role="alert" id="alert-error">
+
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <!-- End Alert -->
+    <div class="card-body">
+      <h5 class="card-title">Créer un partenaire</h5>
+
+      <!-- Accordion without outline borders -->
+      <div class="accordion accordion-flush" id="accordionFlushExample">
+         <div class="accordion-item">
+          <h2 class="accordion-header" id="flush-headingThree">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+              Nouveau partenaire
+            </button>
+          </h2>
+          <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
+            <div class="accordion-body">
+              <!-- Partner Form -->
+              <form method="POST" action="{% url 'partenaire' %}" id="form_partenaire" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row mb-3">
+                  <label class="col-sm-2 col-form-label">Nom du partenaire *</label>
+                  <div class="col-sm-10">
+                    {{ form.denomination | as_crispy_field }}
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label class="col-sm-2 col-form-label">Logo *</label>
+                  <div class="col-sm-10">
+                    {{ form.logo | as_crispy_field }}
+                  </div>
+                </div>
+
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary px-5">
+                    Créer
+                  </button>
+                  <button type="reset" class="btn btn-secondary">
+                    Annuler
+                  </button>
+                </div>
+              </form>
+              <!-- End Partner Form -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- End Accordion without outline borders -->
+    </div>
+  </div>
+
+
+</div>
+
+<section class="section">
+    <h2>Nos Partenaires</h2>
+    <div class="row align-items-top d-flex justify-content-start">
+        <!-- Card with an image on top -->
+        {% for partner in partenaires %}
+        <div class="col-lg-4">
+            <a href="{% url 'partenaire' partner.id %}">
+                <div class="card">
+                    <div class="top-card" style="height: 200px;">
+                        {% if partner.logo %}
+                        <img src="{{ partner.logo.url }}" class="card-img-top img-responsive" alt="logo {{ partner.denomination }}"
+                             style="height: 100%; width: 100%; object-fit: cover;"
+                        >
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <h4 class="mt-2 p-2 fw-semibold">{{ partner.denomination }}</h4>
+                    </div>
+<!--                    {% if matiere.enseigne_par %}-->
+                    <div class="card-footer">
+                        <p>
+                            <i class="ri-user-3-line"></i>
+<!--                            {% if matiere.enseigne_par.all|length >= 0 %}-->
+<!--                            {% for enseignant in matiere.enseigne_par %}-->
+                            <span></span> |
+<!--                            {% endfor %}-->
+<!--                            {% endif %}-->
+                        </p>
+                    </div>
+<!--                    {% endif %}-->
+                </div><!-- End Card with an image on top -->
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<nav aria-label="Page navigation example">
+  <ul class="pagination">
+    {% if partenaires.has_previous %}
+      <li class="page-item"><a class="page-link" href="?page=1">
+          <i class="bi-arrow-bar-left"></i>
+      </a></li>
+      <li class="page-item"><a class="page-link" href="?page={{ partenaires.previous_page_number }}">
+          <i class="ri-arrow-left-s-line"></i>
+      </a></li>
+    {% else %}
+      <li class="page-item disabled"><a class="page-link">
+          <i class="bi-arrow-bar-left"></i>
+      </a></li>
+      <li class="page-item disabled"><a class="page-link">
+          <i class="ri-arrow-left-s-line"></i>
+      </a></li>
+    {% endif %}
+
+    <li class="page-item active">
+      <span class="page-link">Page {{ partenaires.number }} / {{ partenaires.paginator.num_pages }}</span>
+    </li>
+
+    {% if partenaires.has_next %}
+      <li class="page-item"><a class="page-link" href="?page={{ partenaires.next_page_number }}">
+        <i class="ri-arrow-right-s-line"></i>
+      </a></li>
+      <li class="page-item"><a class="page-link" href="?page={{ partenaires.paginator.num_pages }}">
+          <i class="bi-arrow-bar-right"></i>
+      </a></li>
+    {% else %}
+      <li class="page-item disabled"><a class="page-link">
+          <i class="ri-arrow-right-s-line"></i>
+      </a></li>
+      <li class="page-item disabled"><a class="page-link">
+          <i class="bi-arrow-bar-right"></i>
+      </a></li>
+    {% endif %}
+  </ul>
+</nav>
+
+{% endblock %}
+
+{% block custom_js %}
+<!-- Initialisation de TinyMCE -->
+<script>
+    $("#form_partenaire").submit(function(event){
+        event.preventDefault()
+
+        var form = $("#form_partenaire")[0];
+        var formData = new FormData(form);
+
+        $.ajax({
+            url: $(this).attr('action'),
+            type: $(this).attr('method'),
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response){
+                if(response.success){
+                    $("#alert").text(response.msg)
+                    $("#alert").removeClass("d-none")
+                    $("#alert").addClass("show")
+                    $("#alert").addClass("d-block")
+                    <!-- Vider les champs du formulaire apres soumission-->
+                    form.reset()
+                    setTimeout(()=>{
+                        $("#alert").removeClass("show")
+                        $("#alert").removeClass("d-block")
+                        $("#alert").addClass("d-none")
+                    }, 3000)
+                }
+            },
+            error: function(xhr, status, error){
+                $("#alert-error").text(error.msg)
+                $("#alert-error").addClass("show")
+                $("#alert-error").addClass("d-block")
+                $("#alert-error").removeClass("d-none")
+                setTimeout(()=>{
+                    $("#alert-error").removeClass("show")
+                    $("#alert-error").addClass("d-none")
+                    $("#alert-error").removeClass("d-block")
+                }, 3000)
+            }
+
+        })
+    })
+
+
+</script>
+
+{% endblock %}
