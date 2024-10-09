@@ -21,10 +21,53 @@
         {% endautoescape %}
     </div>
 
+    <div class="card p-4">
+        <h3 class="fw-bold">Laissez un commentaire</h3>
+        <form method="POST" action="{% url 'read-article' article.id %}" id="comment_form">
+            {% csrf_token %}
+            {% if is_not_connected %}
+            <div class="row mb-3">
+                <label for="id_name" class="col-sm-2 col-form-label">Nom <span>*</span></label>
+                <div class="col-sm-10">
+                    {{ comment_form.name | as_crispy_field }}
+                </div>
+            </div>
+            {% endif %}
+            <div class="row mb-3">
+                <label for="id_content" class="col-sm-2 col-form-label">Commentaire <span>*</span></label>
+                <div class="col-sm-10">
+                    {{ comment_form.content | as_crispy_field }}
+                </div>
+            </div>
+
+            <div class="col-sm-10 w-100 d-inline-flex justify-content-end">
+                <button type="submit" class="btn btn-primary">Soumettre</button>
+            </div>
+        </form>
+    </div>
+
 
 
 </div>
 
+{% endblock %}
 
-
+{% block custom_js %}
+<script>
+    $("#comment_form").submit(function(event){
+        event.preventDefault();
+        var form = $("#comment_form")[0];
+        $.ajax({
+            url: $(this).attr('action'),
+            type: $(this).attr('method'),
+            data: $(this).serialize(),
+            success: function(res){
+                if(res.success){
+                    console.log(res);
+                    form.reset();
+                }
+            },
+        })
+    })
+</script>
 {% endblock %}

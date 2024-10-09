@@ -6,7 +6,7 @@ from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 
-from landing_page.forms import PostForm, TemoignageForm, PartenaireForm
+from landing_page.forms import PostForm, TemoignageForm, PartenaireForm, CommentForm
 from landing_page.models import Post, Temoignage, Partenaire
 
 
@@ -62,11 +62,26 @@ def blog(request):
 
 
 def lire_article(request, id_article):
-    if request.method == "GET":
-        article = get_object_or_404(Post, id=int(id_article))
-        # print("Article:", article)
-        context = {"article": article}
-        return render(request, "landing_page/lire_article.html", context)
+    article = get_object_or_404(Post, id=int(id_article))
+
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            new_comment = form.save(commit=False)
+            new_comment.post = article
+            new_comment.save()
+            return JsonResponse({"success": True})
+
+    # Comment form
+    comment_form = CommentForm()
+    # Check if user is connected
+    if request.user.username == "":
+        is_not_connected = True
+    else:
+        is_not_connected = False
+
+    context = {"article": article, "comment_form": comment_form, "is_not_connected": is_not_connected}
+    return render(request, "landing_page/lire_article.html", context)
 
 
 def temoignage(request):
