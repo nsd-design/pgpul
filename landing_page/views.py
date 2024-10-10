@@ -7,6 +7,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 
 from landing_page.forms import PostForm, TemoignageForm, PartenaireForm, CommentForm
+
 from landing_page.models import Post, Temoignage, Partenaire
 
 
