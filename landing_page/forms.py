@@ -1,5 +1,7 @@
 from django import forms
-from landing_page.models import Post, Temoignage, Partenaire
+
+from landing_page.models import Post, Temoignage, Partenaire, Comment
+
 from pgpul_admin.forms import TinyMCEWidget
 
 
@@ -43,3 +45,16 @@ class PartenaireForm(forms.ModelForm):
     class Meta:
         model = Partenaire
         fields = ['denomination', 'logo']
+
+
+class CommentForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(CommentForm, self).__init__(*args, **kwargs)
+
+        # Supprimer les labels sur les champs
+        for field_name, field in self.fields.items():
+            field.label = ''
+
+    class Meta:
+        model = Comment
+        fields = ['content']
