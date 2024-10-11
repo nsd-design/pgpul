@@ -21,12 +21,37 @@
         {% endautoescape %}
     </div>
 
-    <div class="card p-4">
+    <div class="card px-4 py-5">
+
+        <div class=" " id="featured-3">
+            <h2 class="pb-2 border-bottom">Commentaires</h2>
+            <div class="row g-3 py-5 row-cols-1" id="comment-container">
+                {% for comment in comments %}
+                <div class="comment col  border border-primary border-end-0 rounded-start">
+        <!--        <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">-->
+        <!--          <svg class="bi" width="1em" height="1em"><use xlink:href="#collection"/></svg>-->
+        <!--        </div>-->
+                    <p class="fs-6 text-body-emphasis">{{ comment.name }}<span class="badge text-secondary fs-6">{{ comment.age }}</span></p>
+                    <p class="fs-5">{{ comment.content }}</p>
+                </div>
+            {% endfor %}
+            </div>
+         </div>
+
+        <div class="b-example-divider"></div>
+
         <h3 class="fw-bold">Laissez un commentaire</h3>
         <form method="POST" action="{% url 'read-article' article.id %}" id="comment_form">
             {% csrf_token %}
             {% if is_not_connected %}
             <div class="row mb-3">
+                <label for="id_name" class="col-sm-2 col-form-label">Nom <span>*</span></label>
+                <div class="col-sm-10">
+                    {{ comment_form.name | as_crispy_field }}
+                </div>
+            </div>
+            {% else %}
+            <div class="row mb-3 d-none">
                 <label for="id_name" class="col-sm-2 col-form-label">Nom <span>*</span></label>
                 <div class="col-sm-10">
                     {{ comment_form.name | as_crispy_field }}
@@ -61,13 +86,27 @@
             url: $(this).attr('action'),
             type: $(this).attr('method'),
             data: $(this).serialize(),
+            dataType: "json",
             success: function(res){
                 if(res.success){
-                    console.log(res);
+                    var newComment = createCommentElement(res.comment);
+                    $("#comment-container").prepend(newComment);
                     form.reset();
                 }
             },
+            error: function(xhr, status, error) {
+                console.error("Une erreur est survenue : " + error);
+            }
         })
     })
+
+    function createCommentElement(comment){
+        var commentHtml = `
+            <div class="comment col  border border-primary border-end-0 rounded-start">
+                <p class="fs-6 text-body-emphasis">${comment.name}<span class="badge text-secondary fs-6">${comment.age}</span></p>
+                <p class="fs-5">${comment.content}</p>
+            </div>
+        `
+    }
 </script>
 {% endblock %}

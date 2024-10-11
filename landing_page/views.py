@@ -5,9 +5,10 @@ from django.contrib.auth import authenticate, login
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
+from django.core.serializers.json import DjangoJSONEncoder
 
 from landing_page.forms import PostForm, TemoignageForm, PartenaireForm, CommentForm
-from landing_page.models import Post, Temoignage, Partenaire
+from landing_page.models import Post, Temoignage, Partenaire, Comment
 
 
 def home(request):
@@ -70,7 +71,20 @@ def lire_article(request, id_article):
             new_comment = form.save(commit=False)
             new_comment.post = article
             new_comment.save()
-            return JsonResponse({"success": True})
+
+            return JsonResponse({
+                "success": True,
+                "comment": {
+                    "name": new_comment.name,
+                    "content": new_comment.content,
+                    "age": new_comment.age()
+                }
+            }, encoder=DjangoJSONEncoder)
+        else:
+            return JsonResponse({"success": False})
+
+    # Get Comments by article
+    comments = Comment.objects.filter(post=int(id_article)).order_by("-created_at")
 
     # Comment form
     comment_form = CommentForm()
@@ -79,8 +93,14 @@ def lire_article(request, id_article):
         is_not_connected = True
     else:
         is_not_connected = False
+        comment_form.fields['name'].initial = request.user.username
 
-    context = {"article": article, "comment_form": comment_form, "is_not_connected": is_not_connected}
+    context = {
+        "article": article,
+        "comment_form": comment_form,
+        "is_not_connected": is_not_connected,
+        "comments": comments,
+    }
     return render(request, "landing_page/lire_article.html", context)
 
 

@@ -35,7 +35,7 @@ class Post(models.Model):
             days = difference.days
             return f"il y a {days} jour(s)"
         else:
-            return f"le {self.created_at.strftime('%d %B %Y')}"
+            return f"le {self.created_at.strftime('%d %b %Y')}"
 
 
 class Comment(models.Model):
@@ -44,6 +44,28 @@ class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(Utilisateur, on_delete=models.CASCADE, null=True)
+
+    def __str__(self):
+        return f"{self.content} - {self.name}"
+
+    def age(self):
+        now = timezone.now()
+        difference = now - self.created_at
+
+        # Détermine combien de jours se sont écoulés
+        if difference < timedelta(minutes=1):
+            return "à l'instant"
+        elif difference < timedelta(hours=1):
+            minutes = difference.seconds // 60
+            return f"il y a {minutes} min"
+        elif difference < timedelta(days=1):
+            hours = difference.seconds // 3600
+            return f"il y a {hours} H"
+        elif difference < timedelta(days=7):
+            days = difference.days
+            return f"il y a {days} jour(s)"
+        else:
+            return f"le {self.created_at.strftime('%d %b %Y')}"
 
 
 class Partenaire(models.Model):
