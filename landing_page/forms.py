@@ -1,5 +1,7 @@
 from django import forms
+
 from landing_page.models import Post, Temoignage, Partenaire, Comment
+
 from pgpul_admin.forms import TinyMCEWidget
 
 
