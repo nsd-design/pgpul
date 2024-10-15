@@ -95,7 +95,7 @@
 
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Liste des Enseignants</h5>
+                    <h5 class="card-title">Liste des Etudiants</h5>
 
                     <!-- Table Enseignants -->
                     <table class="table table-striped" id="tab_etudiants">
@@ -126,6 +126,7 @@
 {% endblock content %}
 
 {% block custom_js %}
+<script src="{% static 'assets/js/datatables.min.js' %}"></script>
 <script>
     $(document).ready(function () {
         <!-- Get liste Enseignants -->
@@ -148,6 +149,8 @@
                     </tr>
                     `)
                 })
+
+                $('#tab_etudiants').DataTable({responsive: true});
             },
         });
 
@@ -172,4 +175,5 @@
         });
     });
 </script>
+
 {% endblock %}

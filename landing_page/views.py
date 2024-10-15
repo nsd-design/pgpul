@@ -149,7 +149,6 @@ def check_file_type(file):
 
 
 def partenaire(request):
-    print("post partenaire...")
     if request.method == "POST":
         form = PartenaireForm(request.POST, request.FILES)
         file = request.FILES.get('logo', None)

@@ -150,7 +150,7 @@
       <h5 class="card-title">Les Matières</h5>
 
       <!-- Table Matieres -->
-      <table class="table table-striped">
+      <table class="table table-striped" id="table-matiere">
         <thead>
           <tr>
             <th scope="col">#</th>
@@ -158,12 +158,13 @@
             <th scope="col">Classe</th>
             <th scope="col">Département</th>
             <th scope="col">Enseignant</th>
+            <th scope="col">Actions</th>
           </tr>
         </thead>
         <tbody>
           {% for matiere in matieres %}
           <tr>
-            <th scope="row">1</th>
+            <th scope="row">{{ forloop.counter }}</th>
             <td>{{ matiere.nom_mat }}</td>
             <td>{{ matiere.classe_mat }}</td>
             <td>{{ matiere.dept_mat }}</td>
@@ -405,5 +406,13 @@
     });
 
   });
+</script>
+
+<script src="{% static 'assets/js/datatables.min.js' %}"></script>
+<script>
+  $(document).ready(function () {
+    $('#table-matiere').DataTable({responsive: true})
+  })
+
 </script>
 {% endblock %}
