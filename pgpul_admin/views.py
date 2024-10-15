@@ -493,8 +493,12 @@ def create_support_cours(request):
     supports_cours = None
     type_user = ""
     user_instance = None
-    if request.method == "GET":
-        supports_cours, type_user, user_instance = get_supports_de_cours(request)
+    # if request.method == "GET":
+    try:
+        supports_cours, type_user, user_instance = get_supports_de_cours(request.user.id)
+    except TypeError:
+        supports_cours, type_user, user_instance = [], None, None
+        print("erreur lors de la recuperation des donnees")
 
     if request.method == "POST":
         extension_authorized = ['.pdf']
@@ -533,28 +537,34 @@ def create_support_cours(request):
     return render(request, template_path + "support_cours.html", context=context)
 
 
-def get_supports_de_cours(request):
+def get_supports_de_cours(usr):
     """
     Les deuxiemes valeurs de retour: `etd` et `ens` designe respectivement
     si l'utilisateur est un Etudiant ou un Enseignant
     :param request:
     :return:
     """
-    usr = request.user
+    # usr = request.user
     try:
-        etudiant = Etudiant.objects.get(id=usr.id)
+        etudiant = Etudiant.objects.get(id=usr)
         matieres_by_departement = Matiere.objects.filter(dept_mat=etudiant.departement_etd)
         support_by_matiere = supportCours.objects.filter(matiere_support__in=matieres_by_departement,
                                                          statut=1).order_by('matiere_support')
-        return support_by_matiere, 'etd', etudiant
+        if support_by_matiere:
+            return support_by_matiere, 'etd', etudiant
+        else:
+            return [], None, None
     except Etudiant.DoesNotExist:
         pass
     try:
-        enseignant = Enseignant.objects.get(id=usr.id)
+        enseignant = Enseignant.objects.get(id=usr)
         matieres_by_departement = Matiere.objects.filter(dept_mat=enseignant.departement_principal)
         support_by_matiere = supportCours.objects.filter(matiere_support__in=matieres_by_departement,
                                                          statut=1).order_by('matiere_support')
-        return support_by_matiere, 'ens', enseignant
+        if support_by_matiere:
+            return support_by_matiere, 'ens', enseignant
+        else:
+            return [], None, None
 
     except Enseignant.DoesNotExist:
-        pass
+        return [], None, None

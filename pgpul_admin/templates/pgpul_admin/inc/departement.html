@@ -140,7 +140,7 @@
                                 <h5 class="card-title">Liste des Facultés</h5>
 
                                 <!-- Table Faculté -->
-                                <table class="table table-striped">
+                                <table class="table table-striped" id="tab-factulte">
                                     <thead>
                                     <tr>
                                         <th scope="col">#</th>
@@ -155,7 +155,7 @@
                                     <tbody>
                                     {% for fac in facultes %}
                                     <tr>
-                                        <th scope="row">1</th>
+                                        <th scope="row">{{ forloop.counter }}</th>
                                         <td>{{ fac.nom_fac }}</td>
                                         <td>{{ fac.code_fac }}</td>
                                     </tr>
@@ -178,21 +178,21 @@
                                 <h5 class="card-title">Liste des Département</h5>
 
                                 <!-- Table Départements -->
-                                <table class="table table-striped">
+                                <table class="table table-striped" id="tab-departements">
                                     <thead>
                                     <tr>
                                         <th scope="col">#</th>
                                         <th scope="col">Nom du Département</th>
-                                        <th scope="col">Code du Département</th>
+                                        <th scope="col" class="text-center">Code Département</th>
                                         <th scope="col">Faculté</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     {% for dept in departements%}
                                     <tr>
-                                        <th scope="row">1</th>
+                                        <th scope="row">{{ forloop.counter }}</th>
                                         <td>{{ dept.nom_dept}}</td>
-                                        <td>{{ dept.code_dept}}</td>
+                                        <td class="text-center">{{ dept.code_dept}}</td>
                                         <td>{{ dept.dept_fac}}</td>
                                     </tr>
                                     {% endfor %}
@@ -214,7 +214,7 @@
                                 <h5 class="card-title">Liste des Classes</h5>
 
                                 <!-- Table Classes -->
-                                <table class="table table-striped">
+                                <table class="table table-striped" id="tab-classes">
                                     <thead>
                                     <tr>
                                         <th scope="col">#</th>
@@ -224,7 +224,7 @@
                                     <tbody>
                                     {% for classe in classes%}
                                     <tr>
-                                        <th scope="row">1</th>
+                                        <th scope="row">{{ forloop.counter }}</th>
                                         <td>{{ classe.designation }}</td>
                                     </tr>
                                     {% endfor %}
@@ -375,5 +375,14 @@
       });
 
     })
+</script>
+<script src="{% static 'assets/js/datatables.min.js' %}"></script>
+<script>
+  $(document).ready(function () {
+   $('#tab-departements').DataTable({responsive: true});
+   $('#tab-factulte').DataTable({responsive: true});
+   $('#tab-classes').DataTable({responsive: true});
+  })
+
 </script>
 {% endblock %}
