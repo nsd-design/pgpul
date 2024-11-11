@@ -1,10 +1,11 @@
 import pathlib
 
+from django.conf import settings
 from django.contrib import messages
 from django.core.mail import EmailMessage, send_mail
 from django.core.serializers import serialize
 from django.db.models import Count
-from django.http import JsonResponse, HttpRequest
+from django.http import JsonResponse, HttpRequest, FileResponse, HttpResponse
 from django.shortcuts import render, redirect, get_list_or_404, get_object_or_404
 from django.template.loader import render_to_string
 from django.urls import reverse
@@ -553,7 +554,7 @@ def get_supports_de_cours(usr):
         if support_by_matiere:
             return support_by_matiere, 'etd', etudiant
         else:
-            return [], None, None
+            return [], 'etd', etudiant
     except Etudiant.DoesNotExist:
         pass
     try:
@@ -564,7 +565,17 @@ def get_supports_de_cours(usr):
         if support_by_matiere:
             return support_by_matiere, 'ens', enseignant
         else:
-            return [], None, None
+            return [], 'ens', enseignant
 
     except Enseignant.DoesNotExist:
         return [], None, None
+
+
+def pdf_viewer(request, id_support):
+    support = get_object_or_404(supportCours, id=id_support)
+    if support.designation_support and support.designation_support.storage.exists(support.designation_support.name):
+        pdf_name = support.designation_support.name
+        pdf_url = os.path.join(settings.MEDIA_URL, pdf_name)
+        return render(request, template_path + 'lire_support_de_cours.html', {"pdf_url": pdf_url})
+    else:
+        return HttpResponse("Le fichier demandé n'existe pas.", status=404)

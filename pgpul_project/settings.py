@@ -77,6 +77,10 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'pgpul_project.urls'
 
+X_FRAME_OPTIONS = "ALLOWALL"
+
+XS_SHARING_ALLOWED_METHODS = ['POST', 'GET', 'OPTIONS', 'PUT', 'DELETE']
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
