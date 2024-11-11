@@ -21,5 +21,6 @@ urlpatterns = [
     path("cours/sommaire/<int:id_matiere>", sommaire_par_matiere, name="sommaire_par_matiere"),
     path("cours/lire_cours/<int:id_cours>/<int:id_matiere>/", affiche_contenu_cours, name="lire_cours"),
     path("cours/support/", create_support_cours, name="support_cours"),
+    path("cours/lire_support/<int:id_support>", pdf_viewer, name="lire_support"),
     path("sommaire/", create_sommaire, name="sommaire"),
 ]

@@ -89,9 +89,9 @@
                     {{ support.filename }}
                 </td>
                 <td>
-                    <button type="button" class="btn btn-outline-info">
+                    <a href="{% url 'lire_support' support.id%}" type="button" class="btn btn-outline-info">
                         <i class="ri-book-open-line"></i>
-                    </button>
+                    </a>
                 </td>
             </tr>
             {% endfor %}
