@@ -55,6 +55,7 @@
 
 </div>
 
+{% if page_obj %}
 <section class="section">
     <h2>Temoignages</h2>
     <div class="row align-items-top d-flex justify-content-start">
@@ -111,7 +112,9 @@
     {% endif %}
   </ul>
 </nav>
-
+{% else %}
+<p>Aucune données trouvées</p>
+{% endif %}
 {% endblock %}
 
 {% block custom_js %}
