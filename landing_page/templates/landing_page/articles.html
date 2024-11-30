@@ -1,9 +1,11 @@
 {% load static %}
 {% load crispy_forms_tags %}
 
+{% if articles %}
 <section class="section">
     <div class="row align-items-top d-flex justify-content-start">
         <!-- Card with an image on top -->
+
         {% for article in articles %}
         <div class="col-lg-4">
             <a href="{% url 'read-article' article.id %}">
@@ -77,3 +79,7 @@
     {% endif %}
   </ul>
 </nav>
+
+{% else %}
+<p>Aucune données trouvées</p>
+{% endif %}

@@ -118,7 +118,7 @@ DATABASES = {
         'USER': 'postgres',  # Nom d'utilisateur PostgreSQL
         'PASSWORD': os.getenv("DB_PASSWORD"),  # Mot de passe PostgreSQL
         'HOST': '127.0.0.1',  # L'emplacement de votre base de données (localhost par défaut)
-        'PORT': '5432',  # Port de la base de données (par défaut est généralement 5432)
+        'PORT': os.getenv("DB_PORT"),  # Port de la base de données (par défaut est généralement 5432)
     }
 }
 

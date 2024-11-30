@@ -1,4 +1,5 @@
 import pathlib
+from pickle import GLOBAL
 
 from django.conf import settings
 from django.contrib import messages
@@ -140,7 +141,8 @@ def create_matiere(request):
         list_matieres.append(current_matiere)
 
     #  Liste des classes
-    liste_classes = get_list_or_404(Classe)
+    # liste_classes = get_list_or_404(Classe)
+    liste_classes = Classe.objects.all()
 
     if request.method == "POST":
         form = MatiereForm(request.POST)
@@ -234,7 +236,8 @@ def enseignant(request):
                 departement_principal=departement_principal,
                 adresse_en=adresse_en,
                 genre_ens=genre_ens,
-                created_by=user
+                created_by=user,
+                user_type='enseignant',
             )
             new_enseignant.save()
 
@@ -295,7 +298,8 @@ def create_etudiant(request):
                     genre_etd=genre_etd,
                     tel_etd=tel_etd,
                     departement_etd=departement_etd,
-                    created_by=user
+                    created_by=user,
+                    user_type='etudiant'
                 )
                 message = "Ce mail a ete envoye pour tester la creation d'etudiant"
                 recipients = ["ibayotech@gmail.com"]
@@ -439,29 +443,52 @@ def afficher_table_matieres(request, id_matiere):
 
 def liste_des_matieres(request):
     user = request.user
-    liste_cours = ""
+    liste_cours = []
+    list_matieres = []
+    department = ""
+    if user.user_type == 'etudiant':
+        department = Etudiant.objects.get(pk=user).values("departement_etd")
+        # departement = dept_etd
+        matieres_by_departement = Matiere.objects.filter(dept_mat=departement)
+        for matiere in matieres_by_departement:
+            mat = Matiere.objects.get(pk=matiere.pk)
+            enseignant = mat.enseigne_par.all()
+            list_enseignant = [ens for ens in enseignant]
+            current_matiere = {
+                "id_matiere": matiere.id,
+                "nom_mat": matiere.nom_mat,
+                "enseigne_par": list_enseignant,
+            }
+            list_matieres.append(current_matiere)
+    elif user.user_type == 'enseignant':
+        liste_cours = Cours.objects.filter(created_by=user)
+        department = Enseignant.objects.get(pk=user).values("departement_principal")
+        # dept_enseignant = obj_enseignant.departement_principal
+        # print("liste cours", liste_cours)
+
+
     #  Si user est un enseignant
-    liste_cours = Cours.objects.filter(created_by=user)
+    # liste_cours = Cours.objects.filter(created_by=user)
     # print("liste cours", liste_cours)
 
     #  Si user est un etudiant
-    dept_etd = Etudiant.objects.get(id=7)
-    departement = dept_etd.departement_etd
-    matieres_by_departement = Matiere.objects.filter(dept_mat=departement)
+    # dept_etd = Etudiant.objects.get(id=7)
+    # departement = dept_etd.departement_etd
+    # matieres_by_departement = Matiere.objects.filter(dept_mat=departement)
 
     #  Recuperer les matieres et les enseignants qui enseignent chacune des matieres
-    list_matieres = []
-    for matiere in matieres_by_departement:
-        mat = Matiere.objects.get(pk=matiere.pk)
-        enseignant = mat.enseigne_par.all()
-        list_enseignant = [ens for ens in enseignant]
-        current_matiere = {
-            "id_matiere": matiere.id,
-            "nom_mat": matiere.nom_mat,
-            "enseigne_par": list_enseignant,
-        }
-        list_matieres.append(current_matiere)
-    context = {"list_matieres": list_matieres, "departement": departement.nom_dept}
+    # list_matieres = []
+    # for matiere in matieres_by_departement:
+    #     mat = Matiere.objects.get(pk=matiere.pk)
+    #     enseignant = mat.enseigne_par.all()
+    #     list_enseignant = [ens for ens in enseignant]
+    #     current_matiere = {
+    #         "id_matiere": matiere.id,
+    #         "nom_mat": matiere.nom_mat,
+    #         "enseigne_par": list_enseignant,
+    #     }
+    #     list_matieres.append(current_matiere)
+    context = {"list_matieres": list_matieres, "departement": department}
     return render(request, template_path+"liste_des_matieres.html", context)
 
 
