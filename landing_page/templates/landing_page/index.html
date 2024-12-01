@@ -1,268 +1,47 @@
+<!DOCTYPE html>
 {% load static %}
-    <!-- Header | Menu de navigation -->
-    {% include 'landing_page/nav_menu.html' %}
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PGPUL | Plateforme de gestion pedagogique de l'université de Labé</title>
+    <link rel="stylesheet" href="{% static 'landing_page/style2.css' %}" />
+  </head>
+  <body>
+    <header class="header">
+      <nav class="navbar">
+        <!-- <h2 class="logo"><a href="#">PGPUL</a></h2> -->
+        <h2 class="logo"><a href="{% url 'home' %}">
+          <img src="{% static 'landing_page/images/logo-pgpul.png' %}" alt="">
+        </a></h2>
+        <input type="checkbox" id="menu-toggle" />
+        <label for="menu-toggle" id="hamburger-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+            <path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </label>
 
-    <!-- Video de presentation de la plateforme -->
-    <div class="video-box">
-        <div class="fond-semi-transparent"></div>
-        <video src="{% static 'landing_page/videos/presentation.mp4' %}" autoplay muted class="w-100 h-auto object-fit-contain video-transparente"></video>
-    </div>
-
-    <!-- Contenu Principal -->
-    <main class="mt-5">
-        <div class="container col-12">
-            <!-- Echantillons de cours -->
-            <!-- <div class="bg-warning p-3"> -->
-                <div class="d-flex flex-row flex-wrap justify-content-sm-center  justify-content-between py-3 col-12">
-                    <a href="#" class="link-underline link-underline-opacity-0 mb-sm-3">
-                        <div class="card col-md-4 col-4 mx-2 shadow" style="width: 18rem;">
-                            <div class="card-image" style="height: 14rem;">
-                                <img src="{% static 'landing_page/images/1.jpg' %}" class="card-img-top w-100 object-fit-cover h-100" alt="...">
-                            </div>
-                            <div class="card-body">
-                                <h5 class="card-title">Card title</h5>
-                                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="#" class="link-underline link-underline-opacity-0 mb-sm-3">
-                        <div class="card col-4 mx-2 shadow icon-link icon-link-hover" style="width: 18rem;">
-                            <div class="card-image" style="height: 14rem;">
-                                <img src="{% static 'landing_page/images/2.jpg' %}" class="card-img-top w-100 h-100 object-fit-cover" alt="...">
-                            </div>
-                            <div class="card-body">
-                                <h5 class="card-title">Card title</h5>
-                                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="#" class="link-underline link-underline-opacity-0 mb-sm-3">
-                        <div class="card col-4 mx-2 shadow icon-link icon-link-hover" style="width: 18rem;">
-                            <div class="card-image" style="height: 14rem;">
-                                <img src="{% static 'landing_page/images/3.jpg' %}" class="card-img-top object-fit-cover w-100 h-100" alt="...">
-                            </div>
-                            <div class="card-body">
-                                <h5 class="card-title">Card title</h5>
-                                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="#" class="link-underline link-underline-opacity-0 mb-sm-3">
-                        <div class="card col-4 mx-2 shadow icon-link icon-link-hover" style="width: 18rem;">
-                            <img src="{% static 'landing_page/images/1.jpg' %}" class="card-img-top" alt="...">
-                            <div class="card-body">
-                                <h5 class="card-title">Card title</h5>
-                                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            </div>
-                        </div>
-                    </a>
-
-                </div>
-            <!-- </div> -->
-            <!-- Fin de Echantillons de cours -->
-
-            <!-- Articles et Communiques -->
-            <div class=" mt-5">
-                <h2>Articles et communiqu&eacute;s</h2>
-                <div class="row d-flex justify-content-between my-3">
-                    <div class="card shadow-lg my-4 col-lg-6" style="max-width: 540px;">
-                        <div class="row g-4">
-                        <div class="col-md-4">
-                            <img src="{% static 'landing_page/images/n2.jpg' %}" class="img-fluid rounded-start" alt="...">
-                        </div>
-                        <div class="col-md-8">
-                            <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                            <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-                    <div class="card shadow-lg my-4 col-lg-6" style="max-width: 540px;">
-                        <div class="row g-0">
-                        <div class="col-md-4">
-                            <img src="{% static 'landing_page/images/n1.jpg' %}" class="img-fluid rounded-start" alt="...">
-                        </div>
-                        <div class="col-md-8">
-                            <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                            <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Fin de Articles et Communiques -->
-
-            <!-- Temoignages Etudiants -->
-
-            <div class=" mt-5">
-                <h2 class="m-ms-2 sm-fs-6">Ce que nos &eacute;tudiants disent de nous</h2>
-                <div class="d-flex flex-wrap justify-content-between justify-content-sm-center">
-                    <div class="card temoignage col-12 my-3 mx-2 shadow" style="max-width: 18rem;">
-                        <div class="card-body">
-                            <i class="fa-solid fa-quote-left"></i>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        </div>
-                        <hr>
-                        <div class="">
-                            <div class="user d-flex p-3">
-                                <div class="avatar rounded-circle my-2">
-                                    <img src="{% static 'landing_page/images/a2.jpg' %}" alt="avatar" class="img-fluid rounded-circle">
-                                </div>
-                                <h5 class="card-title">Primary card title</h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card temoignage col-12 my-3 mx-2 shadow" style="max-width: 18rem;">
-                        <div class="card-body">
-                            <i class="fa-solid fa-quote-left"></i>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        </div>
-                        <hr>
-                        <div class="">
-                            <div class="user d-flex flex-wrap p-3">
-                                <div class="avatar rounded-circle my-2">
-                                    <img src="{% static 'landing_page/images/a1.jpg' %}" alt="avatar" class="img-fluid rounded-circle">
-                                </div>
-                                <h5 class="card-title">Primary card title</h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card temoignage col-12 my-3 mx-2 shadow" style="max-width: 18rem;">
-                        <div class="card-body">
-                            <i class="fa-solid fa-quote-left"></i>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        </div>
-                        <hr>
-                        <div class="">
-                            <div class="user d-flex p-3">
-                                <div class="avatar rounded-circle my-2">
-                                    <img src="{% static 'landing_page/images/a3.jpg' %}" alt="avatar" class="img-fluid rounded-circle">
-                                </div>
-                                <h5 class="card-title">Primary card title</h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card temoignage col-12 my-3 mx-2 shadow" style="max-width: 18rem;">
-                        <div class="card-body">
-                            <i class="fa-solid fa-quote-left"></i>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        </div>
-                        <hr>
-                        <div class="">
-                            <div class="user d-flex p-3">
-                                <div class="avatar rounded-circle my-2">
-                                    <img src="{% static 'landing_page/images/a2.jpg' %}" alt="avatar" class="img-fluid rounded-circle">
-                                </div>
-                                <h5 class="card-title">Primary card title</h5>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Fin Temoignages Etudiants -->
+        <div class="buttons">
+          <!-- <a href="#" class="signin">Sign In</a> -->
+          <a href="{% url 'connexion' %}" class="signup">Se Connecter</a>
         </div>
-        <!-- section de Connexion -->
-        <section class="connexion-sect container-fluid mt-5">
-            <div class="d-flex flex-sm-wrap justify-content-evenly align-items-center p-5">
-                <!-- <div class="img-login"> -->
-                    <img src="{% static 'landing_page/images/login.jpg' %}" class="mw-50 col-12 col-md-4 mb-4 rounded shadow-lg" alt="illustration de connexion" >
-                <!-- </div> -->
-                <div class="formulaire-connexion ms-5 col-12 col-md-6">
-                    <form method="POST" action="{% url 'home' %}" class="w-75" id="connexion">
-                        {% csrf_token %}
-                        <div class="mb-3">
-                            <label for="username" class="form-label fs-4 fw-bold">Nom d'utilisateur</label>
-                            <input type="text" name="username" class="form-control w-100 con-input shadow rounded" id="username" placeholder="jean">
-                        </div>
-                        <div class="mb-3">
-                            <label for="password" class="form-label fs-4 fw-bold">Mot de passe</label>
-                            <input type="password" name="password" class="form-control p-2 con-input shadow rounded" id="password" placeholder="mot de passe">
-                        </div>
-                        <input type="submit" value="Se connecter" class="w-100 btn p-2 fs-4 focus-ring" style="background-color: #074E5E; color: white;">
-                    </form>
-                </div>
-            </div>
-        </section>
-
-        <!-- Nos Partenaires -->
-
-        <div class="container py-3 mt-5">
-            <h2>Nos Partenaires</h2>
-            <div class="d-flex flex-wrap justify-content-between">
-                <div class="card rounded-circle shadow-lg mb-sm-3" style="width: 120px; height: 120px;">
-                    <a href="#">
-                        <img src="{% static 'landing_page/images/logo1.jpg' %}" alt="logo partenaire" class="rounded-circle" style="width: 120px; height: 120px;">
-                    </a>
-                </div>
-                <div class="card rounded-circle shadow-lg mb-sm-3" style="width: 120px; height: 120px;">
-                    <a href="#">
-                        <img src="{% static 'landing_page/images/logo1.jpg' %}" alt="logo partenaire" class="rounded-circle" style="width: 120px; height: 120px;">
-                    </a>
-                </div>
-                <div class="card rounded-circle shadow-lg mb-sm-3" style="width: 120px; height: 120px;">
-                    <a href="#">
-                        <img src="{% static 'landing_page/images/logo1.jpg' %}" alt="logo partenaire" class="rounded-circle" style="width: 120px; height: 120px;">
-                    </a>
-                </div>
-                <div class="card rounded-circle shadow-lg mb-sm-3" style="width: 120px; height: 120px;">
-                    <a href="#">
-                        <img src="{% static 'landing_page/images/logo1.jpg' %}" alt="logo partenaire" class="rounded-circle" style="width: 120px; height: 120px;">
-                    </a>
-                </div>
-                <div class="card rounded-circle shadow-lg mb-sm-3" style="width: 120px; height: 120px;">
-                    <a href="#">
-                        <img src="{% static 'landing_page/images/logo1.jpg' %}" alt="logo partenaire" class="rounded-circle" style="width: 120px; height: 120px;">
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Footer -->
-        <footer class="mt-5">
-            <div class="container py-3">
-                <div class="row">
-                  <div class="col-4 col-md-4 pt-3">
-<!--                    <div class="left">-->
-                        <img src="{% static 'landing_page/images/logo Pgpul.png' %}" alt="logo pgpul" style="width: 8rem;">
-                        <div class="social-media my-3">
-                            <span>facebook</span>
-                            <span>x</span>
-                            <span>linkedin</span>
-                        </div>
-<!--                    </div>-->
-                  </div>
-                  <div class="col-md-4">
-                    <nav>
-                        <ul class="nav flex-column fs-4">
-                            <li class="nav-item">
-                              <a class="nav-link active text-dark " aria-current="page" href="#">Accueil</a>
-                            </li>
-                            <li class="nav-item">
-                              <a class="nav-link text-dark " href="#">Facult&eacute;</a>
-                            </li>
-                            <li class="nav-item">
-                              <a class="nav-link text-dark " href="#">Contact</a>
-                            </li>
-                          </ul>
-                    </nav>
-                  </div>
-                  <div class="col col-md-4 pt-3">
-                    <p class="text-end">&copy;2023</p>
-                  </div>
-                </div>
-              </div>
-
-
-
-        </footer>
-    </main>
-
-    <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-</body>
+      </nav>
+    </header>
+    <section class="hero-section">
+      <div class="hero">
+        <h2>Bienvenue sur PGPUL</h2>
+        <p>
+          Rejoignez-nous ! <br> Connectez-vous pour bénéficier d’offres exclusives et de contenus personnalisés
+        </p>
+        <!-- <div class="buttons">
+          <a href="#" class="join">Join Now</a>
+          <a href="#" class="learn">Learn More</a>
+        </div> -->
+      </div>
+      <div class="img">
+        <video src="https://univ-labe.edu.gn/wp-content/uploads/2023/02/ULABEmp4.mp4" autoplay muted loop></video>
+        <!-- <img src="hero-bg.png" alt="hero image" /> -->
+      </div>
+    </section>
+  </body>
 </html>
