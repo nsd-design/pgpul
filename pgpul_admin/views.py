@@ -602,7 +602,6 @@ def create_support_cours(request):
     return render(request, template_path + "support_cours.html", context=context)
 
 
-@login_required(login_url="connexion")
 def get_supports_de_cours(usr):
     """
     Les deuxiemes valeurs de retour: `etd` et `ens` designe respectivement
