@@ -24,7 +24,28 @@ template_path = "pgpul_admin/pages/"
 
 
 def dashboard(request):
-    return render(request, f'{template_model}dashboard.html')
+    try:
+        nb_enseigants = Utilisateur.objects.filter(user_type='enseignant').count()
+        nb_etudiants = Utilisateur.objects.filter(user_type='etudiant').count()
+        nb_departement = Departement.objects.all().count()
+        nb_facultes = Faculte.objects.all().count()
+        nb_matieres = Matiere.objects.all().count()
+
+        context = {
+            "nb_enseigants":nb_enseigants,
+            "nb_etudiants":nb_etudiants,
+            "nb_departement": nb_departement,
+            "nb_facultes": nb_facultes,
+            "nb_matieres": nb_matieres,
+        }
+    except Utilisateur.DoesNotExist:
+        if nb_enseigants == 0:
+            print("Aucun enseignant trouvé.")
+        if nb_etudiants == 0:
+            print("Aucun élève trouvé.")
+    except Departement.DoesNotExist:
+        print("Aucun departement trouvé")
+    return render(request, f'{template_model}dashboard.html', context=context)
 
 
 def departement(request):
