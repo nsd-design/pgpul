@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
@@ -26,6 +27,7 @@ def connexion(request):
     return render(request, temp+"connexion.html")
 
 
+@login_required(login_url="connexion")
 def deconnexion(request):
     logout(request)
     return redirect('connexion')

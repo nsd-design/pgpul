@@ -3,6 +3,7 @@ from pickle import GLOBAL
 
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMessage, send_mail
 from django.core.serializers import serialize
 from django.db.models import Count
@@ -22,7 +23,7 @@ from utilisateur.models import Utilisateur
 template_model = "pgpul_admin/inc/"
 template_path = "pgpul_admin/pages/"
 
-
+@login_required(login_url="connexion")
 def dashboard(request):
     try:
         nb_enseigants = Utilisateur.objects.filter(user_type='enseignant').count()
@@ -47,7 +48,7 @@ def dashboard(request):
         print("Aucun departement trouvé")
     return render(request, f'{template_model}dashboard.html', context=context)
 
-
+@login_required(login_url="connexion")
 def departement(request):
     # Les Formulaires des 3 models Faculte, Departement et Classe
     fac_form = FaculteForm()  # Formulaire pour la Faculte
@@ -69,6 +70,7 @@ def departement(request):
     return render(request, template_model + "departement.html", context=context)
 
 
+@login_required(login_url="connexion")
 def create_faculte(request):
     if request.method == "POST":
         fac_code = request.POST['code_fac']
@@ -92,6 +94,7 @@ def create_faculte(request):
     return redirect('departement')
 
 
+@login_required(login_url="connexion")
 def create_department(request):
     if request.method == "POST":
         # Verifier si ce code de Departement exist deja dans la db
@@ -116,6 +119,7 @@ def create_department(request):
     return redirect('departement')
 
 
+@login_required(login_url="connexion")
 def create_classe(request):
     if request.method == "POST":
         # Verifier la classe existe dans la db
@@ -139,6 +143,7 @@ def create_classe(request):
     return redirect('departement')
 
 
+@login_required(login_url="connexion")
 def create_matiere(request):
     form_matiere = MatiereForm()
     #  Liste des departements
@@ -187,6 +192,7 @@ def create_matiere(request):
     return render(request, template_model+"matiere.html", context=context)
 
 
+@login_required(login_url="connexion")
 def matiere_par_departement(request):
     if request.method == "GET":
         # Recuperer les id dans le param GET
@@ -213,7 +219,7 @@ def matiere_par_departement(request):
         liste_enseignants = liste_enseignants if liste_enseignants else None
     return JsonResponse({"liste_matieres": liste_matieres, "liste_enseignants": liste_enseignants})
 
-
+@login_required(login_url="connexion")
 def attribuer_matiere_a_pro(request):
     if request.method == "POST":
         id_matiere = request.POST['matiere']
@@ -230,6 +236,7 @@ def attribuer_matiere_a_pro(request):
     return redirect("matiere")
 
 
+@login_required(login_url="connexion")
 def enseignant(request):
     form = EnseignantForm()
     enseignants = Enseignant.objects.all().order_by('last_name')
@@ -272,6 +279,7 @@ def enseignant(request):
     return render(request, template_path+"enseignant.html", context=context)
 
 
+@login_required(login_url="connexion")
 def liste_enseignants(request):
     if request.method == "GET":
         liste_des_enseignants = []
@@ -293,6 +301,7 @@ def liste_enseignants(request):
         return JsonResponse({"liste_enseignants": liste_des_enseignants})
 
 
+@login_required(login_url="connexion")
 def create_etudiant(request):
     form = EtudiantForm()
 
@@ -386,7 +395,7 @@ def get_user_infos(request, id_utilisateur):
 
         return render(request, template_path+"confirmation_compte.html", context=context)
 
-
+@login_required(login_url="connexion")
 def liste_etudiants(request):
     if request.method == "GET":
         etudiants = Etudiant.objects.all().order_by('departement_etd')
@@ -401,6 +410,7 @@ def liste_etudiants(request):
         return JsonResponse({"list_etudiants": list_etudiants})
 
 
+@login_required(login_url="connexion")
 def cours(request):
     form = CoursForm()
 
@@ -424,6 +434,7 @@ def cours(request):
         return JsonResponse({"success": True})
 
 
+@login_required(login_url="connexion")
 def create_sommaire(request):
     form = SommaireForm()
     if request.method == "POST":
@@ -450,6 +461,7 @@ def create_sommaire(request):
     return render(request, template_path+"sommaire.html", context=context)
 
 
+@login_required(login_url="connexion")
 def afficher_table_matieres(request, id_matiere):
     if request.method == "GET":
         form = CoursForm()
@@ -461,7 +473,7 @@ def afficher_table_matieres(request, id_matiere):
         context = {"form": form, "sommaire_maitere": sommaire_maitere, "nom_matiere": nom_matiere}
         return render(request, template_path+"table_des_matieres.html", context=context)
 
-
+@login_required(login_url="connexion")
 def liste_des_matieres(request):
     user = request.user
     liste_cours = []
@@ -513,6 +525,7 @@ def liste_des_matieres(request):
     return render(request, template_path+"liste_des_matieres.html", context)
 
 
+@login_required(login_url="connexion")
 def sommaire_par_matiere(request, id_matiere):
     sommaire_matiere = Sommaire.objects.filter(matiere=id_matiere)
     matiere = Matiere.objects.get(id=id_matiere)
@@ -530,6 +543,7 @@ def sommaire_par_matiere(request, id_matiere):
     return render(request, template_path+"sommaire_par_matiere.html", context)
 
 
+@login_required(login_url="connexion")
 def affiche_contenu_cours(request, id_cours, id_matiere):
 
     cours = Cours.objects.get(id=id_cours)
@@ -538,12 +552,14 @@ def affiche_contenu_cours(request, id_cours, id_matiere):
     return render(request, template_path+"cours.html", context)
 
 
+@login_required(login_url="connexion")
 def create_support_cours(request):
     supports_cours = None
     type_user = ""
     user_instance = None
     # if request.method == "GET":
     try:
+        print("user :", request)
         supports_cours, type_user, user_instance = get_supports_de_cours(request.user.id)
     except TypeError:
         supports_cours, type_user, user_instance = [], None, None
@@ -586,6 +602,7 @@ def create_support_cours(request):
     return render(request, template_path + "support_cours.html", context=context)
 
 
+@login_required(login_url="connexion")
 def get_supports_de_cours(usr):
     """
     Les deuxiemes valeurs de retour: `etd` et `ens` designe respectivement
