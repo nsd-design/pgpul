@@ -24,7 +24,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('pgpul_admin_page/', admin.site.urls),
+    path('admin/', admin.site.urls),
     path('', home, name='home'),
     path('dashmin/', dashboard, name='dashmin'),
     path('dashmin/', include('landing_page.urls')),
