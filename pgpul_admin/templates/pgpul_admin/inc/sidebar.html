@@ -9,7 +9,7 @@
           <span>Dashboard</span>
         </a>
       </li><!-- End Dashboard Nav -->
-
+      {% if user.groups.all.0.name == 'enseignant' %}
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
           <i class="bi bi-menu-button-wide"></i><span>Matieres</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -27,17 +27,20 @@
           </li>
         </ul>
       </li><!-- End Cours Nav -->
+      {% endif %}
 
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
           <i class="bi bi-journal-text"></i><span>Etudiants</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          {% if user.groups.all.0.name == 'enseignant' %}
           <li>
             <a href="{% url 'etudiant' %}">
               <i class="bi bi-circle"></i><span>etudiants</span>
             </a>
           </li>
+          {% endif %}
           <li>
             <a href="{% url 'liste_matieres' %}">
               <i class="bi bi-circle"></i><span>cours</span>
@@ -47,6 +50,7 @@
         </ul>
       </li><!-- End Etudiants Nav -->
 
+      {% if user.groups.all.0.name == 'enseignant' %}
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
           <i class="bi bi-layout-text-window-reverse"></i><span>Enseignants</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -59,7 +63,9 @@
           </li>
         </ul>
       </li><!-- End Enseignants Nav -->
+      {% endif %}
 
+      {% if user.groups.all.0.name == 'enseignant' %}
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#departement" data-bs-toggle="collapse" href="#">
           <i class="bi bi-bar-chart"></i><span>Départements</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -72,7 +78,7 @@
           </li>
         </ul>
       </li><!-- End Departement Nav -->
-
+      {% endif %}
 
       <li class="nav-heading">Admin</li>
 

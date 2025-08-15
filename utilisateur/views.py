@@ -30,7 +30,7 @@ def connexion(request):
 @login_required(login_url="connexion")
 def deconnexion(request):
     logout(request)
-    return redirect('connexion')
+    return redirect('home')
 
 
 def inscription(request):

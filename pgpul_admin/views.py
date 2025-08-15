@@ -3,7 +3,7 @@ from pickle import GLOBAL
 
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.core.mail import EmailMessage, send_mail
 from django.core.serializers import serialize
 from django.db.models import Count
@@ -17,11 +17,15 @@ from pgpul_admin.forms import *
 from pgpul_admin.models import *
 from pgpul_project.settings import EMAIL_HOST_USER
 # from pgpul_project.settings import EMAIL_HOST_USER
+from django.contrib.auth.decorators import user_passes_test
 
 from utilisateur.models import Utilisateur
 
 template_model = "pgpul_admin/inc/"
 template_path = "pgpul_admin/pages/"
+
+def in_group(group_name):
+    return user_passes_test(lambda u: u.is_authenticated and u.groups.filter(name=group_name).exists())
 
 @login_required(login_url="connexion")
 def dashboard(request):
@@ -71,6 +75,7 @@ def departement(request):
 
 
 @login_required(login_url="connexion")
+@permission_required('pgpul_admin.add_faculte', raise_exception=True)
 def create_faculte(request):
     if request.method == "POST":
         fac_code = request.POST['code_fac']
@@ -474,15 +479,19 @@ def afficher_table_matieres(request, id_matiere):
         return render(request, template_path+"table_des_matieres.html", context=context)
 
 @login_required(login_url="connexion")
+# @in_group('enseignant')
 def liste_des_matieres(request):
     user = request.user
     liste_cours = []
     list_matieres = []
-    department = ""
+    department_user = ""
     if user.user_type == 'etudiant':
-        department = Etudiant.objects.get(pk=user).values("departement_etd")
+        try:
+            department_user = Etudiant.objects.get(pk=user.pk).departement_etd
+        except Etudiant.DoesNotExist:
+            print("Etudiant introuvable")
         # departement = dept_etd
-        matieres_by_departement = Matiere.objects.filter(dept_mat=departement)
+        matieres_by_departement = Matiere.objects.filter(dept_mat=department_user)
         for matiere in matieres_by_departement:
             mat = Matiere.objects.get(pk=matiere.pk)
             enseignant = mat.enseigne_par.all()
@@ -495,10 +504,12 @@ def liste_des_matieres(request):
             list_matieres.append(current_matiere)
     elif user.user_type == 'enseignant':
         liste_cours = Cours.objects.filter(created_by=user)
-        department = Enseignant.objects.get(pk=user).values("departement_principal")
+        try:
+            department_user = Enseignant.objects.get(pk=user.pk).departement_principal
+        except Enseignant.DoesNotExist:
+            print("Enseignant introuvable")
         # dept_enseignant = obj_enseignant.departement_principal
         # print("liste cours", liste_cours)
-
 
     #  Si user est un enseignant
     # liste_cours = Cours.objects.filter(created_by=user)
@@ -521,7 +532,7 @@ def liste_des_matieres(request):
     #         "enseigne_par": list_enseignant,
     #     }
     #     list_matieres.append(current_matiere)
-    context = {"list_matieres": list_matieres, "departement": department}
+    context = {"list_matieres": list_matieres, "departement": department_user if department_user else ""}
     return render(request, template_path+"liste_des_matieres.html", context)
 
 
@@ -552,7 +563,6 @@ def affiche_contenu_cours(request, id_cours, id_matiere):
     return render(request, template_path+"cours.html", context)
 
 
-@login_required(login_url="connexion")
 def create_support_cours(request):
     supports_cours = None
     type_user = ""
