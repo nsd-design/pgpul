@@ -1,15 +1,18 @@
 {% extends "pgpul_admin/base.html" %}
+{% load user_tags %}
 
 {% load static %}
 {% load crispy_forms_tags %}
 {% block content %}
 <!-- Lancer le Modal ajout Post-->
+    {% if user|has_group:"chef_departement" %}
     <button type="button" data-bs-toggle="modal" data-bs-target="#create-blog" data-sommaire-id="" data-sommaire-titre="" data-matiere=""
       class="btn btn-primary" title=""
     >
         Nouveau post
         <i class="ri-add-circle-line"></i>
     </button>
+    {% endif %}
 
     <h1 class="mt-2">Articles & Communiqués</h1>
 
